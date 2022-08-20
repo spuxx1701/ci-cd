@@ -1,4 +1,4 @@
-name: npm_docker
+name: docker_push
 
 on:
   workflow_call:
