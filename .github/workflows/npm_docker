@@ -1,0 +1,38 @@
+name: npm_docker
+
+on:
+  workflow_call:
+    inputs:
+      username:
+        required: true
+        type: string
+      repository_name:
+        required: true
+        type: string
+      environment:
+        required: true
+        type: string
+    secrets:
+      token:
+        required: true
+
+jobs:
+  docker_build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Log in to DockerHub
+        uses: docker/login-action@v2  
+        with:
+          username: ${{ inputs.username }}
+          password: ${{ secrets.token }}
+      - name: Build and push
+        uses: docker/build-push-action@v3
+        with:
+          push: true
+          tags: spuxx/${{inputs.repository_name}}:${{inputs.environment}}-latest
