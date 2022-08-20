@@ -36,3 +36,8 @@ jobs:
         with:
           push: true
           tags: spuxx/${{inputs.repository_name}}:${{inputs.environment}}-latest
+          
+    outputs:
+      tags: spuxx/${{inputs.repository_name}}:${{inputs.environment}}-latest
+            
+          
