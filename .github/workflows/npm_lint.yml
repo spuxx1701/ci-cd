@@ -1,5 +1,8 @@
 name: npm_lint
 
+on:
+  workflow_call:
+
 jobs:
   lint:
     name: 'Lint'
