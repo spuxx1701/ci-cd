@@ -15,9 +15,13 @@ on:
     secrets:
       token:
         required: true
+    outputs:
+      tags:
+        description: "The dockerhub tags."
+        value: ${{ jobs.docker_build_and_push.outputs.tags }}
 
 jobs:
-  docker_build:
+  docker_build_and_push:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
