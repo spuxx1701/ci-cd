@@ -6,7 +6,7 @@ on:
       username:
         required: true
         type: string
-      repository_name:
+      repository:
         required: true
         type: string
       environment:
@@ -35,9 +35,9 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: spuxx/${{inputs.repository_name}}:${{inputs.environment}}-latest
+          tags: spuxx/${{inputs.repository}}:${{inputs.environment}}-latest
           
     outputs:
-      tags: spuxx/${{inputs.repository_name}}:${{inputs.environment}}-latest
+      tags: spuxx/${{inputs.repository}}:${{inputs.environment}}-latest
             
           
