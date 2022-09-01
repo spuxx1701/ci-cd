@@ -1,9 +1,7 @@
 # Adjust node version if needed
 FROM node:16 as build
-
 WORKDIR /usr/app/
 COPY ./ ./
-
 RUN npm ci && npm run build
 
 FROM nginx:alpine
