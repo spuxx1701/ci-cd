@@ -64,7 +64,7 @@ jobs:
           host: ${{secrets.ssh_host}}
           username: ${{secrets.ssh_username}}
           key: ${{secrets.ssh_key}}
-          passphrase: ${{secrets.ssh_passphrase}}
+          #passphrase: ${{secrets.ssh_passphrase}}
           script: |
              cd /opt/docker/${{inputs.repository}}/${{inputs.environment}}
              docker-compose pull
