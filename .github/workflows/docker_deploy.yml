@@ -1,4 +1,4 @@
-name: docker_build_and_push
+name: docker_deploy
 
 on:
   workflow_call:
@@ -15,13 +15,19 @@ on:
     secrets:
       token:
         required: true
+      ssh_host:
+        required: true
+      ssh_username:
+        required: true
+      ssh_key:
+        required: true
     outputs:
       tags:
         description: "The dockerhub tags."
         value: ${{ jobs.docker_build_and_push.outputs.tags }}
 
 jobs:
-  docker_build_and_push:
+  build_and_push:
     name: Docker build and push
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -41,8 +47,24 @@ jobs:
         with:
           push: true
           tags: spuxx/${{inputs.repository}}:${{inputs.environment}}-latest
-          
     outputs:
       tags: spuxx/${{inputs.repository}}:${{inputs.environment}}-latest
-            
+      
+  deploy:
+    needs: build_and_push
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Connect and execute
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{secrets.ssh_host}}
+          username: ${{secrets.ssh_username}}
+          key: ${{secrets.ssh_key}}
+          script: |
+             cd /opt/docker/${{inputs.repository}}/${{inputs.environment}}
+             docker-compose pull
+             docker-compose up -d
+      - name: Log success
+        run: echo "Container has been deployed successfully."
           
