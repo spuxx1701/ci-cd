@@ -70,6 +70,7 @@ jobs:
           #passphrase: ${{secrets.ssh_passphrase}}
           script: |
              cd /opt/docker/${{inputs.repository}}/${{inputs.environment}}
+             docker-compose down
              docker-compose pull
              docker-compose up -d
       - name: Log success
