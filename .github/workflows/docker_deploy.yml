@@ -19,6 +19,8 @@ on:
         required: true
       ssh_username:
         required: true
+      ssh_password:
+        required: true
       ssh_key:
         required: true
       ssh_passphrase:
@@ -63,7 +65,8 @@ jobs:
         with:
           host: ${{secrets.ssh_host}}
           username: ${{secrets.ssh_username}}
-          key: ${{secrets.ssh_key}}
+          password: ${{secrets.ssh_password}}
+          #key: ${{secrets.ssh_key}}
           #passphrase: ${{secrets.ssh_passphrase}}
           script: |
              cd /opt/docker/${{inputs.repository}}/${{inputs.environment}}
