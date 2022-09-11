@@ -12,6 +12,9 @@ on:
       environment:
         required: true
         type: string
+      dockerfile:
+        required: true
+        type: string
     secrets:
       token:
         required: true
@@ -46,6 +49,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
+          file: ${{ inputs.dockerfile }}
           tags: spuxx/${{inputs.repository}}:${{inputs.environment}}-latest
     outputs:
       tags: spuxx/${{inputs.repository}}:${{inputs.environment}}-latest
@@ -69,4 +73,3 @@ jobs:
              docker-compose up -d
       - name: Log success
         run: echo "Container has been deployed successfully."
-          
