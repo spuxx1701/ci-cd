@@ -63,7 +63,7 @@ jobs:
           username: ${{secrets.ssh_username}}
           password: ${{secrets.ssh_password}}
           script: |
-             cd /opt/docker/${{inputs.repository}}/${{inputs.environment}}
+             cd /opt/docker/${{inputs.repository}}-${{inputs.environment}}
              docker-compose down
              docker-compose pull
              docker-compose up -d
