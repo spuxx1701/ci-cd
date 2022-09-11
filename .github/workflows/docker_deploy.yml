@@ -49,7 +49,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          file: ${{ inputs.dockerfile }}
+          file: ./${{ inputs.dockerfile }}
           tags: spuxx/${{inputs.repository}}:${{inputs.environment}}-latest
     outputs:
       tags: spuxx/${{inputs.repository}}:${{inputs.environment}}-latest
