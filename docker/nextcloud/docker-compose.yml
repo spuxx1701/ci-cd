@@ -1,0 +1,42 @@
+version: '3.3'
+
+volumes:
+  nextcloud_data:
+  db_data:
+
+networks:
+  default:
+  npm:
+    external: true
+
+services:
+  nextcloud-db:
+    image: mariadb:10.5
+    restart: always
+    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+    volumes:
+      - db_data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=uA313ThzTNmEu0l2RW0g9BKa5Dkhhr
+      - MYSQL_PASSWORD=uA313ThzTNmEu0l2RW0g9BKa5Dkhhr
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+    networks:
+      - default
+
+  nextcloud-app:
+    image: nextcloud
+    restart: always
+    links:
+      - nextcloud-db
+    volumes:
+      - nextcloud_data:/var/www/html
+    environment:
+      - MYSQL_PASSWORD=uA313ThzTNmEu0l2RW0g9BKa5Dkhhr
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - MYSQL_HOST=nextcloud-db
+      - OVERWRITEPROTOCOL=https
+    networks:
+      - default
+      - npm
