@@ -1,0 +1,17 @@
+---
+version: '3.3'
+
+services:
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges: true
+    networks:
+      - default
+
+networks:
+  default:
+  npm:
+    external: true
