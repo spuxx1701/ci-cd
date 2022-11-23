@@ -1,0 +1,15 @@
+version: "3.3"
+
+services:
+  adminer:
+    image: adminer:latest
+    restart: always
+    networks:
+      - npm
+      - db
+
+networks:
+  npm:
+    external: true
+  db:
+    external: true
