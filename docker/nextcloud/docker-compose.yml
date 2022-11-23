@@ -17,8 +17,8 @@ services:
     volumes:
       - db_data:/var/lib/mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=uA313ThzTNmEu0l2RW0g9BKa5Dkhhr
-      - MYSQL_PASSWORD=uA313ThzTNmEu0l2RW0g9BKa5Dkhhr
+      - MYSQL_ROOT_PASSWORD=***
+      - MYSQL_PASSWORD=***
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
     networks:
@@ -32,7 +32,7 @@ services:
     volumes:
       - nextcloud_data:/var/www/html
     environment:
-      - MYSQL_PASSWORD=uA313ThzTNmEu0l2RW0g9BKa5Dkhhr
+      - MYSQL_PASSWORD=***
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
       - MYSQL_HOST=nextcloud-db
