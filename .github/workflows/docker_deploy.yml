@@ -70,6 +70,6 @@ jobs:
              cd /opt/docker/${{inputs.repository}}-${{inputs.environment}}
              docker-compose down
              docker-compose pull
-             docker-compose up -d
+             docker-compose up -d --remove-orphans
       - name: Log success
         run: echo "Container has been deployed successfully."
