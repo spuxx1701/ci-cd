@@ -18,4 +18,4 @@ jobs:
       - name: Install Dependencies
         run: npm ci
       - name: Run Tests (with coverage)
-        run: npm test:coverage
+        run: npm run test:coverage
