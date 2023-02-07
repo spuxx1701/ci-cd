@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Install app dependencies
-RUN npm install
+RUN npm install --production
 
 # Bundle app source
 COPY . .
@@ -17,4 +17,4 @@ COPY . .
 RUN npm run build
 
 # Start the server using the production build
-RUN npm run start:prod
+CMD ["node", "dist/app.js"]
