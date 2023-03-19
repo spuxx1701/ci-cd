@@ -17,5 +17,5 @@ jobs:
           cache: npm
       - name: Install Dependencies
         run: npm ci
-      - name: Lint
+      - name: Check types
         run: tsc
