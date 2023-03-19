@@ -1,11 +1,11 @@
-name: npm_lint
+name: npm_types
 
 on:
   workflow_call:
 
 jobs:
-  lint:
-    name: 'Lint'
+  types:
+    name: 'Check types'
     runs-on: ubuntu-latest
 
     steps:
