@@ -69,7 +69,7 @@ jobs:
           script: |
              cd /opt/docker/${{inputs.repository}}-${{inputs.environment}}
              docker-compose down --remove-orphans
-             docker network prune
+             docker network prune --force
              docker-compose pull
              docker-compose up -d
       - name: Log success
