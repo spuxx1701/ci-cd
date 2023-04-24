@@ -1,0 +1,16 @@
+---
+# External service
+apiVersion: v1
+kind: Service
+metadata:
+  name: <your_service>
+  namespace: <your_namespace>
+spec:
+  selector:
+    app: <your_app>
+  type: LoadBalancer
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: <container_port>
+    nodePort: <host_port>
