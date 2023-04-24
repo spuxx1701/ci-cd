@@ -1,0 +1,25 @@
+# Deploys and sets up lets-ecrypt on a Microk8s cluster.
+# Run 'microk8s enable cert-manager' to enable cert-manager.
+# Documentation: https://microk8s.io/docs/addon-cert-manager
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: lets-encrypt
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: lets-encrypt
+  namespace: lets-encrypt
+spec:
+  acme:
+    email: leopoldhock@outlook.com
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: lets-encrypt-private-key
+    solvers:
+    - http01:
+        ingress:
+          class: public
+
