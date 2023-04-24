@@ -5,13 +5,13 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: lets-encrypt
+  name: tools
 ---
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
   name: lets-encrypt
-  namespace: lets-encrypt
+  namespace: tools
 spec:
   acme:
     email: leopoldhock@outlook.com
