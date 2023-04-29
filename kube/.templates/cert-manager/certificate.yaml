@@ -28,9 +28,9 @@ spec:
       # across namespaces.
       # See https://cert-manager.io/docs/tutorials/syncing-secrets-across-namespaces/#using-reflector
       reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
-      reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: "hello-world"
+      reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: "<list>"
       reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
-      reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "hello-world"
+      reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "<list>"
   commonName: "*.<your_domain>"
   dnsNames:
     - "<your_domain>"
