@@ -19,6 +19,15 @@ spec:
   issuerRef:
     name: lets-encrypt
     kind: ClusterIssuer
+  secretTemplate:
+    annotations:
+      # Tell reflector to reflect the TLS secret into other namespaces. This is required
+      # for ingress in other namespaces to use this certificate since secrets cannot be used
+      # across namespaces.
+      # See https://cert-manager.io/docs/tutorials/syncing-secrets-across-namespaces/#using-reflector
+      reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+      reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
+      reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "hello-world"
   dnsNames:
     - "<your_domain>"
     - "*.<your_domain>"
