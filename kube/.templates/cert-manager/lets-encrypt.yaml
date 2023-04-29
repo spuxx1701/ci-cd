@@ -1,0 +1,23 @@
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: lets-encrypt
+  # Put the issuer to where cert-manager is or to its own namespace
+  namespace: cert-manager
+spec:
+  acme:
+    email: <your_email>
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: issuer-account-key
+    solvers:
+      - dns01:
+          webhook:
+            # Netcup-specific cert-manager webhook implementation
+            # See https://github.com/aellwein/cert-manager-webhook-netcup
+            groupName: com.netcup.webhook
+            solverName: netcup
+            config:
+              secretRef: netcup-secret
+              secretNamespace: cert-manager
