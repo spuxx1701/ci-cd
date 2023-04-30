@@ -32,7 +32,7 @@ on:
         value: ${{ jobs.docker_build_and_push.outputs.tags }}
 
 jobs:
-  build_and_push:
+  docker_release:
     name: Docker build and release
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -57,8 +57,7 @@ jobs:
         with:
           push: true
           file: ./${{ inputs.dockerfile }}
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ inputs.tag }}
     outputs:
       tags: ${{ steps.meta.outputs.tags }}
       labels: ${{ steps.meta.outputs.labels }}
