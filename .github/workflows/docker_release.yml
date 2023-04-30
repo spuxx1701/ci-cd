@@ -32,18 +32,16 @@ jobs:
     name: Docker build and release
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    env:
-      image_name: ${{ inputs.username }}/${{ inputs.repository }}:${{ inputs.tag }}
     steps:
-      - name: Setup
-        shell: bash
-        run: |
-          echo "This job will attempt to build and push image $image_name to Dockerhub."
       - name: Extract metadata for the Docker image
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ${{ env.image_name }}
+          images: ${{ inputs.username }}/${{ inputs.repository }}
+      - name: Print metadata
+        shell: bash
+        run: |
+          echo "Full image name: ${{ steps.meta.outputs.tags }}"
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
@@ -59,7 +57,7 @@ jobs:
         with:
           push: true
           file: ./${{ inputs.dockerfile }}
-          tags: ${{ env.image_name }}
+          tags: ${{ steps.meta.outputs.tags }}
       - name: Finish
         shell: bash
         run: |
