@@ -18,10 +18,6 @@ on:
         description: "The dockerfile path relative to the root folder. Defaults to 'Dockerfile'."
         default: Dockerfile
         type: string
-      image_name:
-        description: "The docker image. Will default to 'username/repository:tag'."
-        default: ${{ inputs.username }}/${{ inputs.repository }}:${{ inputs.tag }}
-        type: string
     secrets:
       token:
         description: "The dockerhub access token."
@@ -30,6 +26,9 @@ on:
       tags:
         description: "The dockerhub tags."
         value: ${{ jobs.docker_build_and_push.outputs.tags }}
+        
+env:
+  IMAGE_NAME: ${{ inputs.username }}/${{ inputs.repository }}:${{ inputs.tag }}
 
 jobs:
   docker_release:
@@ -40,12 +39,12 @@ jobs:
       - name: Setup
         shell: bash
         run: |
-          echo "This job will attempt to build and push image '${{ inputs.image_name }}' to Dockerhub."
+          echo "This job will attempt to build and push image '$IMAGE_NAME' to Dockerhub."
       - name: Extract metadata for the Docker image
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ${{ inputs.image_name }}
+          images: $IMAGE_NAME
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
@@ -61,7 +60,7 @@ jobs:
         with:
           push: true
           file: ./${{ inputs.dockerfile }}
-          tags: ${{ inputs.image_name }}
+          tags: $IMAGE_NAME
       - name: Finish
         shell: bash
         run: |
