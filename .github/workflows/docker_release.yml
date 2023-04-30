@@ -3,9 +3,6 @@ name: docker_release
 on:
   workflow_call:
     inputs:
-      tag:
-        required: true
-        type: string
       username:
         description: "Your dockerhub username. Defaults to 'spuxx'."
         default: spuxx
