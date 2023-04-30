@@ -3,26 +3,24 @@ name: docker_release
 on:
   workflow_call:
     inputs:
-      username:
+      tag:
         required: true
+        type: string
+      username:
+        description: "Your dockerhub username. Defaults to 'spuxx'."
+        default: spuxx
         type: string
       repository:
-        required: true
-        type: string
-      environment:
-        required: true
+        description: "The dockerhub repository. Defaults to the git repository name."
+        default: ${{ github.event.repository.name }}
         type: string
       dockerfile:
-        required: true
+        description: "The dockerfile path relative to the root folder. Defaults to 'Dockerfile'."
+        default: Dockerfile
         type: string
     secrets:
       token:
-        required: true
-      ssh_host:
-        required: true
-      ssh_username:
-        required: true
-      ssh_password:
+        description: "The dockerhub access token."
         required: true
     outputs:
       tags:
@@ -39,7 +37,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: spuxx/${{inputs.repository}}:${{inputs.environment}}
+          images: spuxx/${{inputs.repository}}:${{inputs.tag}}
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
