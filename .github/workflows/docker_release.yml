@@ -26,20 +26,19 @@ on:
       tags:
         description: "The dockerhub tags."
         value: ${{ jobs.docker_build_and_push.outputs.tags }}
-        
-env:
-  IMAGE_NAME: ${{ inputs.username }}/${{ inputs.repository }}:${{ inputs.tag }}
 
 jobs:
   docker_release:
     name: Docker build and release
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    env:
+      image_name: ${{ inputs.username }}/${{ inputs.repository }}:${{ inputs.tag }}
     steps:
       - name: Setup
         shell: bash
         run: |
-          echo "This job will attempt to build and push image '$IMAGE_NAME' to Dockerhub."
+          echo "This job will attempt to build and push image '$image_name' to Dockerhub."
       - name: Extract metadata for the Docker image
         id: meta
         uses: docker/metadata-action@v4
@@ -60,7 +59,7 @@ jobs:
         with:
           push: true
           file: ./${{ inputs.dockerfile }}
-          tags: $IMAGE_NAME
+          tags: $image_name
       - name: Finish
         shell: bash
         run: |
