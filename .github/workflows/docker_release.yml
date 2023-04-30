@@ -18,6 +18,10 @@ on:
         description: "The dockerfile path relative to the root folder. Defaults to 'Dockerfile'."
         default: Dockerfile
         type: string
+      image_name:
+        description: "The docker image. Will default to 'username/repository:tag'."
+        default: ${{ inputs.username }}/${{ inputs.repository }}:${{ inputs.tag }}
+        type: string
     secrets:
       token:
         description: "The dockerhub access token."
@@ -37,7 +41,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: spuxx/${{inputs.repository}}:${{inputs.tag}}
+          images: ${{ inputs.image_name }}
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
