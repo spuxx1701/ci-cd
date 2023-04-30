@@ -38,7 +38,7 @@ jobs:
       - name: Setup
         shell: bash
         run: |
-          echo "This job will attempt to build and push image '$image_name' to Dockerhub."
+          echo "This job will attempt to build and push image $image_name to Dockerhub."
       - name: Extract metadata for the Docker image
         id: meta
         uses: docker/metadata-action@v4
@@ -63,7 +63,7 @@ jobs:
       - name: Finish
         shell: bash
         run: |
-          echo "Image '${{ steps.meta.outputs.tags }}' successfully build and pushed to registry."
+          echo "Image ${{ steps.meta.outputs.tags }} successfully build and pushed to registry."
     outputs:
       tags: ${{ steps.meta.outputs.tags }}
       labels: ${{ steps.meta.outputs.labels }}
