@@ -57,7 +57,11 @@ jobs:
         with:
           push: true
           file: ./${{ inputs.dockerfile }}
-          tags: ${{ inputs.tag }}
+          tags: ${{ inputs.image_name }}
+      - name: Finish
+        shell: bash
+        run: |
+          echo "Image successfully build and pushed to registry: ${{ steps.meta.outputs.tags }}"
     outputs:
       tags: ${{ steps.meta.outputs.tags }}
       labels: ${{ steps.meta.outputs.labels }}
