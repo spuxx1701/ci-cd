@@ -59,7 +59,7 @@ jobs:
         with:
           push: true
           file: ./${{ inputs.dockerfile }}
-          tags: $image_name
+          tags: "$image_name"
       - name: Finish
         shell: bash
         run: |
