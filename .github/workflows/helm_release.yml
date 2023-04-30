@@ -31,4 +31,5 @@ jobs:
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.5.0
         env:
+          CR_GIT_REPO: helm-charts
           CR_TOKEN: "${{ secrets.token }}"
