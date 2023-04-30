@@ -30,7 +30,5 @@ jobs:
         uses: azure/setup-helm@v3
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.5.0
-        with:
-          charts_repo_url: ${{ inputs.charts_repo_url }}
         env:
           CR_TOKEN: "${{ secrets.token }}"
