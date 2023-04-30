@@ -43,7 +43,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: $image_name
+          images: ${{ env.image_name }}
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
@@ -59,7 +59,7 @@ jobs:
         with:
           push: true
           file: ./${{ inputs.dockerfile }}
-          tags: $image_name
+          tags: ${{ env.image_name }}
       - name: Finish
         shell: bash
         run: |
