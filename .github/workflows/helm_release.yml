@@ -2,6 +2,11 @@ name: helm_release
 
 on:
   workflow_call:
+    inputs:
+      charts_repo_url:
+        description: "The URL of the charts repository. Defaults to '<github_repo_owner>.github.io/helm-charts'."
+        default: ${{ github.repository_owner }}.github.io/helm-charts
+        type: string
     secrets:
       token:
         description: "The github access token for CR."
@@ -25,5 +30,7 @@ jobs:
         uses: azure/setup-helm@v3
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.5.0
+        with:
+          charts_repo_url: ${{ inputs.charts_repo_url }}
         env:
           CR_TOKEN: "${{ secrets.token }}"
