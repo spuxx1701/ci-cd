@@ -44,7 +44,6 @@ jobs:
           tags: |
             type=ref,event=branch,suffix=${{ steps.prep.outputs.suffix }}
             type=semver,pattern={{version}}
-            type=sha
       
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
