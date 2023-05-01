@@ -34,13 +34,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
-      SUFFIX: ""
+      suffix: ""
     steps:
       - name: Prepare
         run: |
           if [ ${{ inputs.addTimestamp }} ]; then
-            $SUFFIX = $(+%Y%m%d-%H%M%S)
-            echo "Suffix $SUFFIX will be added to the image tag."
+            echo "{suffix}={$(+%Y%m%d%H%M%S)} >> "$GITHUB_ENV"
+            echo "Suffix ${{ env.suffix }} will be added to the image tag."
           fi
       - name: Extract metadata for the Docker image
         id: meta
