@@ -35,6 +35,7 @@ jobs:
     timeout-minutes: 5
     steps:
       - name: Prepare
+        id: prep
         run: |
           if [ ${{ inputs.type }} == "branch" ]; then
             SUFFIX="-$(date +'%Y%m%d-%H%M%S')"
@@ -53,6 +54,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: ${{ inputs.username }}/${{ inputs.repository }}
+          type: ${{ steps.prep.outputs.type }} 
       
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
