@@ -15,10 +15,6 @@ on:
         description: "The dockerfile path relative to the root folder. Defaults to 'Dockerfile'."
         default: Dockerfile
         type: string
-      type:
-        description: "The type of the docker image. Will define how the image tags are being created. Allowed values are 'branch' and 'semver'. Defaults to 'branch'."
-        default: "branch"
-        type: string
     secrets:
       token:
         description: "The dockerhub access token."
@@ -37,17 +33,8 @@ jobs:
       - name: Prepare
         id: prep
         run: |
-          if [ ${{ inputs.type }} == "branch" ]; then
-            SUFFIX="-$(date +'%Y%m%d-%H%M%S')"
-            TYPE="ref,event=branch,suffix=${SUFFIX}"
-          elif [ ${{ inputs.type }} == "semver" ]; then
-            TYPE="type=semver,pattern={{version}}"
-          else
-            echo "Error: type has invalid value."
-            exit 1
-          fi
-          echo "{type}={$TYPE}" >> $GITHUB_OUTPUT
-          echo "Image tag type will be: $TYPE"
+          SUFFIX="-$(date +'%Y%m%d-%H%M%S')"
+          echo "{suffix}={$SUFFIX}" >> $GITHUB_OUTPUT
           
       - name: Extract metadata for the Docker image
         id: meta
@@ -55,7 +42,9 @@ jobs:
         with:
           images: ${{ inputs.username }}/${{ inputs.repository }}
           tags: |
-            ${{ steps.prep.outputs.type }}
+            type=ref,event=branch,suffix="${{ steps.prep.outputs.suffix }}"
+            type=semver,pattern={{version}}
+            type=sha
       
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
