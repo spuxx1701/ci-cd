@@ -34,7 +34,10 @@ jobs:
         id: prep
         run: |
           SUFFIX="-$(date +'%Y%m%d-%H%M%S')"
-          echo "{suffix}={$SUFFIX}" >> $GITHUB_OUTPUT
+          echo "suffix=$SUFFIX" >> $GITHUB_OUTPUT
+          
+      - name: Check suffix
+        
           
       - name: Extract metadata for the Docker image
         id: meta
