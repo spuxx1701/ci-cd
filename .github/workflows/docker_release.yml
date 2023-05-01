@@ -15,10 +15,10 @@ on:
         description: "The dockerfile path relative to the root folder. Defaults to 'Dockerfile'."
         default: Dockerfile
         type: string
-      addTimestamp:
-        description: "If set to 'true', a timestamp will be added to the image tag."
-        default: false
-        type: boolean
+      type:
+        description: "The type of the docker image. Will define how the image tags are being created. Allowed values are 'branch' and 'semver'. Defaults to 'branch'."
+        default: "branch"
+        type: string
     secrets:
       token:
         description: "The dockerhub access token."
@@ -33,15 +33,19 @@ jobs:
     name: Docker build and release
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    env:
-      suffix: ""
     steps:
       - name: Prepare
         run: |
-          if [ ${{ inputs.addTimestamp }} ]; then
-            echo "{suffix}={$(+%Y%m%d%H%M%S)}" >> "$GITHUB_ENV"
-            echo "Suffix ${{ env.suffix }} will be added to the image tag."
+          if [ ${{ inputs.type }} == "branch" ]; 
+            SUFFIX="-$(+%Y%m%)-$(d%H%M%S)"
+            TYPE="ref,event=branch,suffix=${SUFFIX}"
+            echo "{type}={$TYPE}" >> $GITHUB_OUTPUT
+          elif [ ${{ inputs.type }} == "semver" ]
+          else
+            echo "Error: type has invalid value."
+            exit 1
           fi
+          
       - name: Extract metadata for the Docker image
         id: meta
         uses: docker/metadata-action@v4
