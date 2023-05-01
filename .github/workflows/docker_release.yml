@@ -39,12 +39,13 @@ jobs:
           if [ ${{ inputs.type }} == "branch" ]; 
             SUFFIX="-$(+%Y%m%)-$(d%H%M%S)"
             TYPE="ref,event=branch,suffix=${SUFFIX}"
-            echo "{type}={$TYPE}" >> $GITHUB_OUTPUT
           elif [ ${{ inputs.type }} == "semver" ]
+            TYPE="type=semver,pattern={{version}}"
           else
             echo "Error: type has invalid value."
             exit 1
           fi
+          echo "{type}={$TYPE}" >> $GITHUB_OUTPUT
           
       - name: Extract metadata for the Docker image
         id: meta
