@@ -39,7 +39,7 @@ jobs:
       - name: Prepare
         run: |
           if [ ${{ inputs.addTimestamp }} ]; then
-            echo "{suffix}={$(+%Y%m%d%H%M%S)} >> "$GITHUB_ENV"
+            echo "{suffix}={$(+%Y%m%d%H%M%S)}" >> "$GITHUB_ENV"
             echo "Suffix ${{ env.suffix }} will be added to the image tag."
           fi
       - name: Extract metadata for the Docker image
