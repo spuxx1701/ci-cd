@@ -39,7 +39,7 @@ jobs:
       - name: Prepare
         run: |
           if [ ${{ inputs.addTimestamp }} ]; then
-            SUFFIX = $(+%Y%m%d-%H%M%S)
+            $SUFFIX = $(+%Y%m%d-%H%M%S)
             echo "Suffix $SUFFIX will be added to the image tag."
           fi
       - name: Extract metadata for the Docker image
