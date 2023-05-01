@@ -46,6 +46,7 @@ jobs:
             exit 1
           fi
           echo "{type}={$TYPE}" >> $GITHUB_OUTPUT
+          echo "Image tag type will be: $TYPE"
           
       - name: Extract metadata for the Docker image
         id: meta
