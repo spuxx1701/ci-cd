@@ -37,7 +37,7 @@ jobs:
       - name: Prepare
         run: |
           if [ ${{ inputs.type }} == "branch" ]; then
-            SUFFIX="-$(+%Y%m%)-$(d%H%M%S)"
+            SUFFIX="-$(date +'%Y%m%d-%H%M%S')"
             TYPE="ref,event=branch,suffix=${SUFFIX}"
           elif [ ${{ inputs.type }} == "semver" ]; then
             TYPE="type=semver,pattern={{version}}"
