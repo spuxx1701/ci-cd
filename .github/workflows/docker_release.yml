@@ -54,7 +54,8 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: ${{ inputs.username }}/${{ inputs.repository }}
-          tags: "type=${{ steps.prep.outputs.type }}"
+          tags: |
+            ${{ steps.prep.outputs.type }}
       
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
