@@ -3,34 +3,34 @@ name: helm_release
 on:
   workflow_call:
     inputs:
-      charts_repo_url:
-        description: "The URL of the charts repository. Defaults to '<github_repo_owner>.github.io/helm-charts'."
-        default: ${{ github.repository_owner }}.github.io/helm-charts
+      charts_dir: 
+        description: "The helm charts directory. Defaults to '/.helm'."
+        default: '/.helm'
+        type: string
+      charts_repo:
+        description: "The repository for publishing the helm charts. Defaults to 'helm-charts'."
+        default: helm-charts
+        type: string
+      owner:
+        description: "The owner of charts_repo. Defaults to the owner of the source repository."
+        default: ${{ github.repository_owner }}
         type: string
     secrets:
       token:
-        description: "The github access token for CR."
+        description: "The github access token for writing to charts_repo."
         required: true
       
 jobs:
   helm_release:
-    permissions:
-      contents: write
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v2
+      - name: Publish Helm chart
+        uses: stefanprodan/helm-gh-pages@master
         with:
-          fetch-depth: 0
-      - name: Configure Git
-        run: |
-          git config user.name "${{ github.repository_owner }}"
-          git config user.email "${{ github.repository_owner }}@users.noreply.github.com"
-      - name: Install Helm
-        uses: azure/setup-helm@v3
-      - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.5.0
-        with:
-          config: "${{ github.workspace }}/.cr.yaml"
-        env:
-          CR_TOKEN: "${{ secrets.token }}"
+          token: ${{ secrets.token }}
+          charts_dir: ${{ inputs.charts_dir }}
+          charts_url: https://{{ inputs.owner }}.github.io/${{ inputs.charts_repo }}
+          owner: ${{ inputs.owner }}
+          repository: ${{ inputs.charts_repo }}
+          branch: gh-pages
