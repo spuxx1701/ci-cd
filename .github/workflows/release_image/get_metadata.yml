@@ -11,6 +11,9 @@ on:
         description: "The dockerhub repository. Defaults to the github repository name."
         default: ${{ github.event.repository.name }}
         type: string
+    outputs:
+      image_tags: ${{ jobs.get_metadata.image_tags }}
+      image_labels: ${{ jobs.get_metadata.image_labels }}
 
 jobs:
   get_metadata:
