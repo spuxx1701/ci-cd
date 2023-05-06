@@ -32,6 +32,7 @@ jobs:
       - get_metadata
     uses: spuxx1701/ci-cd/.github/workflows/release_image/build_and_push_image.yml@v2.0
     with:
+      image_tags: ${{ jobs.get_metadata.image_tags }}
       dockerhub_username: ${{ inputs.dockerhub_username }}
       dockerhub_repository: ${{ inputs.dockerhub_repository }}
       dockerfile: ${{ inputs.dockerfile }}
