@@ -12,8 +12,10 @@ on:
         default: ${{ github.event.repository.name }}
         type: string
     outputs:
-      image_tags: ${{ jobs.get_metadata.image_tags }}
-      image_labels: ${{ jobs.get_metadata.image_labels }}
+      image_tags:
+        description: "The image tags."
+      image_labels:
+        description: "The image labels."
 
 jobs:
   get_metadata:
