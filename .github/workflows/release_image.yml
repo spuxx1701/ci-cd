@@ -37,4 +37,4 @@ jobs:
       dockerhub_repository: ${{ inputs.dockerhub_repository }}
       dockerfile: ${{ inputs.dockerfile }}
     secrets:
-      dockerhub_token: ${{ inputs.dockerhub_username }}
+      dockerhub_token: ${{ secrets.dockerhub_token }}
