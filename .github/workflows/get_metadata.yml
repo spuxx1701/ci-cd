@@ -14,8 +14,10 @@ on:
     outputs:
       image_tags:
         description: "The image tags."
+        value: ${{ jobs.get_metadata.outputs.image_tags }}
       image_labels:
         description: "The image labels."
+        value: ${{ jobs.get_metadata.outputs.image_labels }}
 
 jobs:
   get_metadata:
