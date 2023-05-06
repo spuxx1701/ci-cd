@@ -4,8 +4,8 @@ on:
   workflow_call:
     inputs:
       dockerhub_username:
-        description: "Your dockerhub username. Defaults to the github repository owner."
-        default: ${{ github.repository_owner }}
+        description: "Your dockerhub username. Defaults to 'spuxx'."
+        default: spuxx
         type: string
       dockerhub_repository:
         description: "The dockerhub repository. Defaults to the github repository name."
