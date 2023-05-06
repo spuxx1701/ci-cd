@@ -17,7 +17,7 @@ on:
 
 jobs:
   get_metadata:
-    name: Docker build and release
+    name: Get metadata for image and release
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
