@@ -11,6 +11,18 @@ on:
         description: "The dockerhub repository. Defaults to the github repository name."
         default: ${{ github.event.repository.name }}
         type: string
+      dockerfile:
+        description: "The dockerfile path relative to the root folder. Defaults to 'Dockerfile'."
+        default: Dockerfile
+        type: string
+      image_tags:
+        description: "The image tags."
+        type: string
+        required: true
+    secrets:
+      dockerhub_token:
+        description: "The dockerhub access token."
+        required: true
 
 jobs:
   get_metadata:
@@ -18,3 +30,14 @@ jobs:
     with:
       dockerhub_username: ${{ inputs.dockerhub_username }}
       dockerhub_repository: ${{ inputs.dockerhub_repository }}
+      
+  build_and_push_image:
+    needs:
+      - get_metadata
+    uses: spuxx1701/ci-cd/.github/workflows/release_image/build_and_push_image.yml@v2.0
+    with:
+      dockerhub_username: ${{ inputs.dockerhub_username }}
+      dockerhub_repository: ${{ inputs.dockerhub_repository }}
+      dockerfile: ${{ inputs.dockerfile }}
+    secrets:
+      dockerhub_token: ${{ inputs.dockerhub_username }}
