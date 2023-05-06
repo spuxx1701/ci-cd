@@ -3,6 +3,10 @@ name: build_and_push_image
 on:
   workflow_call:
     inputs:
+      image_tags:
+        description: "The image tags."
+        type: string
+        required: true
       dockerhub_username:
         description: "Your dockerhub username. Defaults to the github repository owner."
         default: ${{ github.repository_owner }}
@@ -15,10 +19,6 @@ on:
         description: "The dockerfile path relative to the root folder. Defaults to 'Dockerfile'."
         default: Dockerfile
         type: string
-      image_tags:
-        description: "The image tags."
-        type: string
-        required: true
     secrets:
       dockerhub_token:
         description: "The dockerhub access token."
