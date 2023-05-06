@@ -1,0 +1,38 @@
+name: get_metadata
+
+on:
+  workflow_call:
+    inputs:
+      dockerhub_username:
+        description: "Your dockerhub username. Defaults to the github repository owner."
+        default: ${{ github.repository_owner }}
+        type: string
+      dockerhub_repository:
+        description: "The dockerhub repository. Defaults to the github repository name."
+        default: ${{ github.event.repository.name }}
+        type: string
+
+jobs:
+  get_metadata:
+    name: Docker build and release
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Prepare
+        id: prep
+        run: |
+          SUFFIX="-${{ github.sha }}"
+          echo "suffix=$SUFFIX" >> $GITHUB_OUTPUT
+          
+      - name: Extract metadata for the Docker image
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ inputs.dockerhub_username }}/${{ inputs.dockerhub_repository }}
+          tags: |
+            type=ref,event=branch,suffix=${{ steps.prep.outputs.suffix }}
+            type=semver,pattern={{version}}
+            
+    outputs:
+      image_tags: ${{ steps.meta.outputs.tags }}
+      image_labels: ${{ steps.meta.outputs.labels }}
