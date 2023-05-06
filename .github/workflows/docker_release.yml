@@ -33,7 +33,7 @@ jobs:
       - name: Prepare
         id: prep
         run: |
-          SUFFIX="-$(date +'%Y%m%d-%H%M%S')"
+          SUFFIX="-${{ github.sha }}"
           echo "suffix=$SUFFIX" >> $GITHUB_OUTPUT
           
       - name: Extract metadata for the Docker image
