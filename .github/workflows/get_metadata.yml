@@ -12,9 +12,12 @@ on:
         default: ${{ github.event.repository.name }}
         type: string
     outputs:
-      image_tags:
-        description: "The image tags."
-        value: ${{ jobs.get_metadata.outputs.image_tags }}
+      image_name:
+        description: "The name of the image."
+        value: ${{ jobs.get_metadata.outputs.image_name }}
+      image_version:
+        description: "The version of the image."
+        value: ${{ jobs.get_metadata.outputs.image_version }}
       image_labels:
         description: "The image labels."
         value: ${{ jobs.get_metadata.outputs.image_labels }}
@@ -44,9 +47,11 @@ jobs:
         shell: bash
         run: |
           echo "Finished retrieving metadata."
-          echo "Image tags: ${{ steps.meta.outputs.tags }}"
+          echo "Image name: ${{ steps.meta.outputs.tags }}"
+          echo "Image version: ${{ steps.meta.outputs.version }}"
           echo "Image labels: ${{ steps.meta.outputs.labels }}"
             
     outputs:
-      image_tags: ${{ steps.meta.outputs.tags }}
+      image_name: ${{ steps.meta.outputs.tags }}
+      image_version: ${{ steps.meta.outputs.version }}
       image_labels: ${{ steps.meta.outputs.labels }}
