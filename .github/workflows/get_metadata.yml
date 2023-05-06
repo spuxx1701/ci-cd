@@ -40,6 +40,13 @@ jobs:
             type=ref,event=branch,suffix=${{ steps.prep.outputs.suffix }}
             type=semver,pattern={{version}}
             
+      - name: Finish
+        shell: bash
+        run: |
+          echo "Finished retrieving metadata."
+          echo "Image tags: ${{ steps.meta.outputs.tags }}"
+          echo "Image labels: ${{ steps.meta.outputs.labels }}"
+            
     outputs:
       image_tags: ${{ steps.meta.outputs.tags }}
       image_labels: ${{ steps.meta.outputs.labels }}
