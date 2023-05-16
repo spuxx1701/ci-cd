@@ -3,7 +3,7 @@ name: build_and_push_image
 on:
   workflow_call:
     inputs:
-      image_name:
+      image_names:
         description: "The image name."
         type: string
         required: true
@@ -48,7 +48,7 @@ jobs:
         with:
           push: true
           file: ./${{ inputs.dockerfile }}
-          tags: ${{ inputs.image_name }}
+          tags: ${{ inputs.image_names }}
           
       - name: Finish
         shell: bash
