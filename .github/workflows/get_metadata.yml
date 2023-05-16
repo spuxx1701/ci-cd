@@ -11,6 +11,10 @@ on:
         description: "The dockerhub repository. Defaults to the github repository name."
         default: ${{ github.event.repository.name }}
         type: string
+      latest:
+        description: "Whether the image should also be tagged as the latest image."
+        default: false
+        type: boolean
     outputs:
       image_name:
         description: "The name of the image."
@@ -43,6 +47,8 @@ jobs:
           tags: |
             type=ref,event=branch,suffix=${{ steps.prep.outputs.suffix }}
             type=semver,pattern={{version}}
+          flavor: |
+            latest=${{ inputs.latest }}
             
       - name: Finish
         shell: bash
