@@ -15,6 +15,10 @@ on:
         description: "The dockerfile path relative to the root folder. Defaults to 'Dockerfile'."
         default: Dockerfile
         type: string
+      latest:
+        description: "Whether the image should also be tagged as the latest image."
+        default: false
+        type: boolean
     secrets:
       dockerhub_token:
         description: "The dockerhub access token."
@@ -26,6 +30,7 @@ jobs:
     with:
       dockerhub_username: ${{ inputs.dockerhub_username }}
       dockerhub_repository: ${{ inputs.dockerhub_repository }}
+      latest: ${{ inputs.latest }}
       
   build_and_push_image:
     needs:
