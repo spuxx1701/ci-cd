@@ -16,9 +16,9 @@ on:
         default: Dockerfile
         type: string
       latest:
-        description: "Whether the image should also be tagged as the latest image."
-        default: false
-        type: boolean
+        description: "Whether the image should also be tagged as the latest image. Can be either 'auto', 'true' or 'false'. Defaults to 'auto'."
+        default: 'auto'
+        type: string
     secrets:
       dockerhub_token:
         description: "The dockerhub access token."
