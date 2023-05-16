@@ -12,9 +12,9 @@ on:
         default: ${{ github.event.repository.name }}
         type: string
       latest:
-        description: "Whether the image should also be tagged as the latest image."
-        default: false
-        type: boolean
+        description: "Whether the image should also be tagged as the latest image. Can be either 'auto', 'true' or 'false'. Defaults to 'auto'."
+        default: 'auto'
+        type: string
     outputs:
       image_names:
         description: "The names of the image."
