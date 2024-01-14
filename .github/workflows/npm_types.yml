@@ -16,4 +16,4 @@ jobs:
           node-version: 20.x
           cache: npm
       - name: Check types
-        run: npm tsc --noEmit
+        run: npx tsc --noEmit
