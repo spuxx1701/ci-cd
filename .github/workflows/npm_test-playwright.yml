@@ -20,4 +20,4 @@ jobs:
       - name: Install Browsers
         run: npx playwright install
       - name: Run Tests
-        run: npm test:ui
+        run: npm run test:ui
