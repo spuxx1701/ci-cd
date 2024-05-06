@@ -65,15 +65,12 @@ jobs:
           path: dist
           key: dist
 
-      - name: Check package version
+      - name: Publish to npm
         run: |
           if [[ -z "${{ needs.check_version.outputs.PACKAGE_VERSION }}" ]]; then
             echo "PACKAGE_VERSION is not defined"
             exit 1
           fi
-
-      - name: Publish to npm
-        run: |
           if [[ "${{ needs.check_version.outputs.PACKAGE_VERSION }}" == *-* ]]; then
             echo "Publishing pre-release version ${{ needs.check_version.outputs.PACKAGE_VERSION }}"
             pnpm -r publish --access public --tag prerelease
