@@ -23,6 +23,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Check version
+        id: check_version
         run: |
           TAG_VERSION=${GITHUB_REF#refs/tags/v}
           PACKAGE_VERSION=$(node -p "require('./package.json').version")
@@ -31,7 +32,9 @@ jobs:
             echo "Tag version ($TAG_VERSION) does not match package.json version ($PACKAGE_VERSION)"
             exit 1
           fi
-          echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
+          echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_OUTPUT
+    outputs:
+      PACKAGE_VERSION: ${{ steps.check_version.outputs.PACKAGE_VERSION }}
 
   publish:
     name: Publish
@@ -64,18 +67,18 @@ jobs:
 
       - name: Check package version
         run: |
-          if [[ -z "${{ env.PACKAGE_VERSION }}" ]]; then
+          if [[ -z "${{ needs.check_version.outputs.PACKAGE_VERSION }}" ]]; then
             echo "PACKAGE_VERSION is not defined"
             exit 1
           fi
 
       - name: Publish to npm
         run: |
-          if [[ "${{ env.PACKAGE_VERSION }}" == *-* ]]; then
-            echo "Publishing pre-release version ${{ env.PACKAGE_VERSION }}"
+          if [[ "${{ needs.check_version.outputs.PACKAGE_VERSION }}" == *-* ]]; then
+            echo "Publishing pre-release version ${{ needs.check_version.outputs.PACKAGE_VERSION }}"
             pnpm -r publish --access public --tag prerelease
           else
-            echo "Publishing release version ${{ env.PACKAGE_VERSION }}"
+            echo "Publishing release version ${{ needs.check_version.outputs.PACKAGE_VERSION }}"
             pnpm -r publish --access public --tag latest
           fi
         env:
