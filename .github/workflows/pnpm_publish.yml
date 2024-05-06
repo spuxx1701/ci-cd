@@ -2,6 +2,10 @@ name: Publish
 
 on:
   workflow_call:
+    secrets:
+      NPM_TOKEN:
+        description: "Token to authenticate with npm registry"
+        required: true
 
 jobs:
   check_version:
