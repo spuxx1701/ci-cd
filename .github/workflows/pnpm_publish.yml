@@ -26,6 +26,7 @@ jobs:
         run: |
           TAG_VERSION=${GITHUB_REF#refs/tags/v}
           PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          echo "Package version is ($PACKAGE_VERSION)"
           if [ "$TAG_VERSION" != "$PACKAGE_VERSION" ]; then
             echo "Tag version ($TAG_VERSION) does not match package.json version ($PACKAGE_VERSION)"
             exit 1
@@ -56,17 +57,20 @@ jobs:
           run_install: false
 
       - uses: actions/cache@v4
-        name: Setup dist cache
+        name: Retrieve cached dist
         with:
           path: dist
           key: dist
 
-      - name: Publish to npm
+      - name: Check package version
         run: |
           if [[ -z "${{ env.PACKAGE_VERSION }}" ]]; then
             echo "PACKAGE_VERSION is not defined"
             exit 1
           fi
+
+      - name: Publish to npm
+        run: |
           if [[ "${{ env.PACKAGE_VERSION }}" == *-* ]]; then
             echo "Publishing pre-release version ${{ env.PACKAGE_VERSION }}"
             pnpm -r publish --access public --tag prerelease
