@@ -71,6 +71,8 @@ jobs:
             echo "PACKAGE_VERSION is not defined"
             exit 1
           fi
+          echo "Publishing as:"
+          npm whoami
           if [[ "${{ needs.check_version.outputs.PACKAGE_VERSION }}" == *-* ]]; then
             echo "Publishing pre-release version ${{ needs.check_version.outputs.PACKAGE_VERSION }}"
             pnpm -r publish --no-git-checks --access public --tag prerelease
