@@ -65,6 +65,9 @@ jobs:
           path: dist
           key: dist
 
+      - name: Setup .npmrc file
+        run: echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
+
       - name: Publish to npm
         run: |
           if [[ -z "${{ needs.check_version.outputs.PACKAGE_VERSION }}" ]]; then
