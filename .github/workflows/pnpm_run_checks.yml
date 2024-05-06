@@ -24,6 +24,10 @@ jobs:
         run: |
           echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
 
+      - name: Print pnpm store path
+        run: |
+          echo "${{ env.STORE_PATH }}"
+
       - uses: actions/cache@v4
         name: Setup pnpm cache
         with:
