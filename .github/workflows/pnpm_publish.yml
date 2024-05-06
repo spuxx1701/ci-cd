@@ -30,6 +30,7 @@ jobs:
             echo "Tag version ($TAG_VERSION) does not match package.json version ($PACKAGE_VERSION)"
             exit 1
           fi
+          echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
 
   publish:
     name: Publish
@@ -62,12 +63,15 @@ jobs:
 
       - name: Publish to npm
         run: |
-          version=$(pnpm -r run env print VERSION)
-          if [[ "$version" == *-* ]]; then
-            echo "Publishing pre-release version $version"
+          if [[ -z "${{ env.PACKAGE_VERSION }}" ]]; then
+            echo "PACKAGE_VERSION is not defined"
+            exit 1
+          fi
+          if [[ "${{ env.PACKAGE_VERSION }}" == *-* ]]; then
+            echo "Publishing pre-release version ${{ env.PACKAGE_VERSION }}"
             pnpm -r publish --access public --tag prerelease
           else
-            echo "Publishing release version $version"
+            echo "Publishing release version ${{ env.PACKAGE_VERSION }}"
             pnpm -r publish --access public --tag latest
           fi
         env:
