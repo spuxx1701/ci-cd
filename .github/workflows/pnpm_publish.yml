@@ -75,10 +75,10 @@ jobs:
           npm whoami
           if [[ "${{ needs.check_version.outputs.PACKAGE_VERSION }}" == *-* ]]; then
             echo "Publishing pre-release version ${{ needs.check_version.outputs.PACKAGE_VERSION }}"
-            pnpm -r publish --no-git-checks --access public --tag prerelease
+            pnpm publish --no-git-checks --access public --tag prerelease
           else
             echo "Publishing release version ${{ needs.check_version.outputs.PACKAGE_VERSION }}"
-            pnpm -r publish --no-git-checks --access public --tag latest
+            pnpm publish --no-git-checks --access public --tag latest
           fi
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
