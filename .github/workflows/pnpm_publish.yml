@@ -61,6 +61,14 @@ jobs:
           key: dist
 
       - name: Publish to npm
-        run: pnpm publish --provenance --access-public
+        run: |
+          version=$(pnpm -r run env print VERSION)
+          if [[ "$version" == *-* ]]; then
+            echo "Publishing pre-release version $version"
+            pnpm -r publish --access public --tag prerelease
+          else
+            echo "Publishing release version $version"
+            pnpm -r publish --access public --tag latest
+          fi
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
