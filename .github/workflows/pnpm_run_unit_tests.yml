@@ -8,6 +8,20 @@ on:
         type: string
         required: false
         default: "test:unit"
+      COVERAGE_DISABLE:
+        description: "Whether code coverage reporting should be disabled."
+        type: string
+        required: false
+        default: "false"
+      COVERAGE_FILENAME:
+        description: "Filename of the code coverage report."
+        type: string
+        required: true
+      COVERAGE_FAIL_BELOW_MIN:
+        description: "Minimum code coverage required to pass in %. Defaults to 80."
+        type: string
+        required: false
+        default: "80"
 
 jobs:
   run_unit_tests:
@@ -40,3 +54,10 @@ jobs:
         env:
           TEST_COMMAND: ${{ inputs.TEST_COMMAND_UNIT }}
         run: pnpm run $TEST_COMMAND
+
+      - name: Code Coverage Summary
+        if: inputs.COVERAGE_DISABLE != 'true'
+        uses: irongut/CodeCoverageSummary@v1.3.0
+        with:
+          filename: ${{ inputs.COVERAGE_FILENAME }}
+          fail_below_min: ${{ inputs.COVERAGE_FAIL_BELOW_MIN }}
