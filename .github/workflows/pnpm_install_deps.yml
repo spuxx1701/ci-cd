@@ -2,7 +2,7 @@ name: Install dependencies and cache
 on:
   workflow_call:
     inputs:
-      FLAGS:
+      PNPM_FLAGS:
         description: 'Flags to pass to pnpm commands (e.g. "-r --frozen-lockfile")'
         type: string
         required: false
