@@ -44,4 +44,4 @@ jobs:
       - name: Run checks
         env:
           CHECK_COMMAND: ${{ inputs.CHECK_COMMAND }}
-        run: pnpm ${{ inputs.PNPM_FLAGS }} run $TEST_COMMAND
+        run: pnpm ${{ inputs.PNPM_FLAGS }} run $CHECK_COMMAND
