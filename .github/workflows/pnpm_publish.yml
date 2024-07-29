@@ -3,6 +3,10 @@ name: Publish
 on:
   workflow_call:
     inputs:
+      PNPM_VERSION:
+        description: 'The version of pnpm to use. Optional if packageManager is specified in package.json'
+        required: false
+        type: number
       PNPM_FLAGS:
         description: 'Flags to pass to pnpm commands (e.g. "-r --frozen-lockfile")'
         type: string
@@ -20,25 +24,25 @@ jobs:
       matrix:
         node-version: [20]
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
 
-      - name: Check version
-        id: check_version
-        run: |
-          TAG_VERSION=${GITHUB_REF#refs/tags/v}
-          PACKAGE_VERSION=$(node -p "require('./package.json').version")
-          echo "Package version is ($PACKAGE_VERSION)"
-          if [ "$TAG_VERSION" != "$PACKAGE_VERSION" ]; then
-            echo "Tag version ($TAG_VERSION) does not match package.json version ($PACKAGE_VERSION)"
-            exit 1
-          fi
-          echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_OUTPUT
+    - name: Check version
+      id: check_version
+      run: |
+        TAG_VERSION=${GITHUB_REF#refs/tags/v}
+        PACKAGE_VERSION=$(node -p "require('./package.json').version")
+        echo "Package version is ($PACKAGE_VERSION)"
+        if [ "$TAG_VERSION" != "$PACKAGE_VERSION" ]; then
+          echo "Tag version ($TAG_VERSION) does not match package.json version ($PACKAGE_VERSION)"
+          exit 1
+        fi
+        echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_OUTPUT
     outputs:
       PACKAGE_VERSION: ${{ steps.check_version.outputs.PACKAGE_VERSION }}
 
@@ -46,48 +50,48 @@ jobs:
     name: Publish
     runs-on: ubuntu-latest
     needs:
-      - check_version
+    - check_version
     strategy:
       matrix:
         node-version: [20]
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 8
-          run_install: false
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v4
+      with:
+        version: ${{ inputs.PNPM_VERSION }}
+        run_install: false
 
-      - uses: actions/cache@v4
-        name: Retrieve cached dist
-        with:
-          path: dist
-          key: dist
+    - uses: actions/cache@v4
+      name: Retrieve cached dist
+      with:
+        path: dist
+        key: dist
 
-      - name: Setup .npmrc file
-        run: echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+    - name: Setup .npmrc file
+      run: echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Publish to npm
-        run: |
-          if [[ -z "${{ needs.check_version.outputs.PACKAGE_VERSION }}" ]]; then
-            echo "PACKAGE_VERSION is not defined"
-            exit 1
-          fi
-          echo "Publishing as:"
-          npm whoami
-          if [[ "${{ needs.check_version.outputs.PACKAGE_VERSION }}" == *-* ]]; then
-            echo "Publishing pre-release version ${{ needs.check_version.outputs.PACKAGE_VERSION }}"
-            pnpm ${{ inputs.PNPM_FLAGS }} publish --no-git-checks --access public --tag prerelease
-          else
-            echo "Publishing release version ${{ needs.check_version.outputs.PACKAGE_VERSION }}"
-            pnpm ${{ inputs.PNPM_FLAGS }} publish --no-git-checks --access public --tag latest
-          fi
+    - name: Publish to npm
+      run: |
+        if [[ -z "${{ needs.check_version.outputs.PACKAGE_VERSION }}" ]]; then
+          echo "PACKAGE_VERSION is not defined"
+          exit 1
+        fi
+        echo "Publishing as:"
+        npm whoami
+        if [[ "${{ needs.check_version.outputs.PACKAGE_VERSION }}" == *-* ]]; then
+          echo "Publishing pre-release version ${{ needs.check_version.outputs.PACKAGE_VERSION }}"
+          pnpm ${{ inputs.PNPM_FLAGS }} publish --no-git-checks --access public --tag prerelease
+        else
+          echo "Publishing release version ${{ needs.check_version.outputs.PACKAGE_VERSION }}"
+          pnpm ${{ inputs.PNPM_FLAGS }} publish --no-git-checks --access public --tag latest
+        fi

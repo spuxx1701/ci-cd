@@ -3,6 +3,10 @@ name: Install dependencies and cache
 on:
   workflow_call:
     inputs:
+      PNPM_VERSION:
+        description: 'The version of pnpm to use. Optional if packageManager is specified in package.json'
+        required: false
+        type: number
       PNPM_FLAGS:
         description: 'Flags to pass to pnpm commands (e.g. "-r --frozen-lockfile")'
         type: string
@@ -27,7 +31,7 @@ jobs:
     - name: Setup pnpm
       uses: pnpm/action-setup@v4
       with:
-        version: 8
+        version: ${{ inputs.PNPM_VERSION }}
         run_install: false
 
     - name: Install dependencies

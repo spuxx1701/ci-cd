@@ -3,6 +3,10 @@ name: Install dependencies and cache
 on:
   workflow_call:
     inputs:
+      PNPM_VERSION:
+        description: 'The version of pnpm to use. Optional if packageManager is specified in package.json'
+        required: false
+        type: number
       PNPM_FLAGS:
         description: 'Arguments to pass to pnpm commands (e.g. "-r --frozen-lockfile")'
         type: string
@@ -27,7 +31,7 @@ on:
         type: string
         required: false
         default: "80"
-        
+
 
 jobs:
   run_unit_tests:
@@ -36,35 +40,35 @@ jobs:
       matrix:
         node-version: [20]
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-      - name: Retrieve cached node_modules
-        uses: actions/cache@v4
-        with:
-          path: node_modules
-          key: node_modules
+    - name: Retrieve cached node_modules
+      uses: actions/cache@v4
+      with:
+        path: node_modules
+        key: node_modules
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 8
-          run_install: false
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v4
+      with:
+        version: ${{ inputs.PNPM_VERSION }}
+        run_install: false
 
-      - name: Run unit tests
-        env:
-          TEST_COMMAND: ${{ inputs.TEST_COMMAND_UNIT }}
-        run: pnpm ${{ inputs.PNPM_FLAGS }} run $TEST_COMMAND
+    - name: Run unit tests
+      env:
+        TEST_COMMAND: ${{ inputs.TEST_COMMAND_UNIT }}
+      run: pnpm ${{ inputs.PNPM_FLAGS }} run $TEST_COMMAND
 
-      - name: Code Coverage Summary
-        if: inputs.COVERAGE_DISABLE != true
-        uses: irongut/CodeCoverageSummary@v1.3.0
-        with:
-          filename: ${{ inputs.COVERAGE_FILENAME }}
-          fail_below_min: ${{ inputs.COVERAGE_FAIL_BELOW_MIN }}
-          badge: true
+    - name: Code Coverage Summary
+      if: inputs.COVERAGE_DISABLE != true
+      uses: irongut/CodeCoverageSummary@v1.3.0
+      with:
+        filename: ${{ inputs.COVERAGE_FILENAME }}
+        fail_below_min: ${{ inputs.COVERAGE_FAIL_BELOW_MIN }}
+        badge: true
