@@ -8,6 +8,11 @@ on:
         type: string
         required: false
         default: "check"
+      PNPM_FLAGS:
+        description: 'Arguments to pass to pnpm commands (e.g. "-r --frozen-lockfile")'
+        type: string
+        required: false
+        default: ''
 
 jobs:
   run_checks:
@@ -37,4 +42,4 @@ jobs:
           run_install: false
 
       - name: Run checks
-        run: pnpm check
+        run: pnpm ${{ inputs.PNPM_FLAGS }}check
