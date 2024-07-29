@@ -8,11 +8,11 @@ on:
         type: string
         required: false
         default: ''
-      PNPM_FLAGS:
-        description: 'Arguments to pass to pnpm commands (e.g. "-r --frozen-lockfile")'
-        type: string
+      PNPM_BUILD:
+        description: "Whether to run pnpm -r build before tests"
+        type: boolean
         required: false
-        default: ''
+        default: false
       CHECK_COMMAND:
         description: "Command to run required checks like linting, formatting, etc."
         type: string
@@ -41,9 +41,13 @@ jobs:
         cache: 'pnpm'
 
     - name: Install dependencies
-      run: pnpm install ${{ inputs.PNPM_FLAGS }}
+      run: pnpm install --frozen-lockfile
+
+    - name: Build packages
+      if: ${{ inputs.PNPM_BUILD }}
+      run: pnpm -r build
 
     - name: Run checks
       env:
         CHECK_COMMAND: ${{ inputs.CHECK_COMMAND }}
-      run: pnpm ${{ inputs.PNPM_FLAGS }} run $CHECK_COMMAND
+      run: pnpm run $CHECK_COMMAND

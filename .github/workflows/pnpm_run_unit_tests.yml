@@ -8,11 +8,11 @@ on:
         type: string
         required: false
         default: ''
-      PNPM_FLAGS:
-        description: 'Arguments to pass to pnpm commands (e.g. "-r --frozen-lockfile")'
-        type: string
+      PNPM_BUILD:
+        description: "Whether to run pnpm -r build before tests"
+        type: boolean
         required: false
-        default: ''
+        default: false
       TEST_COMMAND_UNIT:
         description: "Command to run unit tests"
         type: string
@@ -56,17 +56,13 @@ jobs:
         cache: 'pnpm'
 
     - name: Install dependencies
-      run: pnpm install ${{ inputs.PNPM_FLAGS }}
+      run: pnpm install --frozen-lockfile
+
+    - name: Build packages
+      if: ${{ inputs.PNPM_BUILD }}
+      run: pnpm -r build
 
     - name: Run unit tests
       env:
         TEST_COMMAND: ${{ inputs.TEST_COMMAND_UNIT }}
-      run: pnpm ${{ inputs.PNPM_FLAGS }} run $TEST_COMMAND
-
-    - name: Code Coverage Summary
-      if: inputs.COVERAGE_DISABLE != true
-      uses: irongut/CodeCoverageSummary@v1.3.0
-      with:
-        filename: ${{ inputs.COVERAGE_FILENAME }}
-        fail_below_min: ${{ inputs.COVERAGE_FAIL_BELOW_MIN }}
-        badge: true
+      run: pnpm run $TEST_COMMAND

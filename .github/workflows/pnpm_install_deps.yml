@@ -8,8 +8,6 @@ on:
         type: string
         required: false
         default: ''
-      PNPM_FLAGS:
-        description: 'Flags to pass to pnpm commands (e.g. "-r --frozen-lockfile")'
         type: string
         required: false
         default: ''
@@ -36,4 +34,4 @@ jobs:
         cache: 'pnpm'
 
     - name: Install dependencies
-      run: pnpm install ${{ inputs.PNPM_FLAGS }}
+      run: pnpm -r install  --frozen-lockfile
