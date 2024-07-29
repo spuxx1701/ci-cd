@@ -3,6 +3,11 @@ name: Install dependencies and cache
 on:
   workflow_call:
     inputs:
+      PNPM_FLAGS:
+        description: 'Arguments to pass to pnpm commands (e.g. "-r --frozen-lockfile")'
+        type: string
+        required: false
+        default: ''
       TEST_COMMAND_UNIT:
         description: "Command to run unit tests"
         type: string
@@ -22,6 +27,7 @@ on:
         type: string
         required: false
         default: "80"
+        
 
 jobs:
   run_unit_tests:
@@ -53,7 +59,7 @@ jobs:
       - name: Run unit tests
         env:
           TEST_COMMAND: ${{ inputs.TEST_COMMAND_UNIT }}
-        run: pnpm run $TEST_COMMAND
+        run: pnpm ${{ inputs.PNPN_FLAGS }} run $TEST_COMMAND
 
       - name: Code Coverage Summary
         if: inputs.COVERAGE_DISABLE != true
