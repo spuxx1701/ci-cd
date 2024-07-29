@@ -2,6 +2,12 @@ name: Publish
 
 on:
   workflow_call:
+    inputs:
+      PNPM_FLAGS:
+        description: 'Flags to pass to pnpm commands (e.g. "-r --frozen-lockfile")'
+        type: string
+        required: false
+        default: ''
     secrets:
       NPM_TOKEN:
         description: "Token to authenticate with npm registry"
@@ -80,8 +86,8 @@ jobs:
           npm whoami
           if [[ "${{ needs.check_version.outputs.PACKAGE_VERSION }}" == *-* ]]; then
             echo "Publishing pre-release version ${{ needs.check_version.outputs.PACKAGE_VERSION }}"
-            pnpm publish --no-git-checks --access public --tag prerelease
+            pnpm ${{ inputs.PNPM_FLAGS }} publish --no-git-checks --access public --tag prerelease
           else
             echo "Publishing release version ${{ needs.check_version.outputs.PACKAGE_VERSION }}"
-            pnpm publish --no-git-checks --access public --tag latest
+            pnpm ${{ inputs.PNPM_FLAGS }} publish --no-git-checks --access public --tag latest
           fi
