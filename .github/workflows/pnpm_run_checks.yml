@@ -3,16 +3,16 @@ name: Run checks
 on:
   workflow_call:
     inputs:
-      CHECK_COMMAND:
-        description: "Command to run required checks like linting, formatting, etc."
-        type: string
-        required: false
-        default: "check"
       PNPM_FLAGS:
         description: 'Arguments to pass to pnpm commands (e.g. "-r --frozen-lockfile")'
         type: string
         required: false
         default: ''
+      CHECK_COMMAND:
+        description: "Command to run required checks like linting, formatting, etc."
+        type: string
+        required: false
+        default: "check"
 
 jobs:
   run_checks:
@@ -42,4 +42,6 @@ jobs:
           run_install: false
 
       - name: Run checks
-        run: pnpm ${{ inputs.PNPM_FLAGS }}check
+        env:
+          CHECK_COMMAND: ${{ inputs.CHECK_COMMAND }}
+        run: pnpm ${{ inputs.PNPM_FLAGS }} run $TEST_COMMAND
