@@ -1,0 +1,48 @@
+name: Run checks
+
+on:
+  workflow_call:
+    inputs:
+      CONFIG_FILE_PATH:
+        description: 'The path to the release-please configuration file'
+        type: string
+        required: false
+        default: '.release-please/rp-config.json'
+      MANIFEST_FILE_PATH:
+        description: 'The path to the release-please manifest file'
+        type: string
+        required: false
+        default: '.release-please/rp-manifest.json'
+    secrets:
+      GITHUB_TOKEN:
+        description: "Token to authenticate with GitHub"
+        required: true
+
+jobs:
+  release_please_create_pr:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [22]
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v4
+      with:
+        version: ${{ inputs.PNPM_VERSION }}
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'pnpm'
+
+    - name: Create release-please pull request
+      run: |
+        pnpx release-please \
+        --token=${{ secrets.GITHUB_TOKEN }} \
+        --config-file=${{ inputs.CONFIG_FILE_PATH }} \
+        --manifest-file=${{ inputs.MANIFEST_FILE_PATH }} \
+        release-pr
