@@ -9,7 +9,7 @@ on:
         required: false
         default: ''
       PNPM_BUILD:
-        description: "Whether to run pnpm -r build before tests"
+        description: "Whether to run pnpm -r build before checks"
         type: boolean
         required: false
         default: false
