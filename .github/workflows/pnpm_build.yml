@@ -2,6 +2,12 @@ name: Build the project
 
 on:
   workflow_call:
+    inputs:
+      PNPM_FLAGS:
+        description: 'Flags to pass to pnpm commands (e.g. "-r --frozen-lockfile")'
+        type: string
+        required: false
+        default: ''
 
 jobs:
   build:
@@ -31,7 +37,7 @@ jobs:
           run_install: false
 
       - name: Build
-        run: pnpm build
+        run: pnpm ${{ inputs.PNPM_FLAGS }} build
 
       - name: Cache dist folder
         uses: actions/cache@v4
