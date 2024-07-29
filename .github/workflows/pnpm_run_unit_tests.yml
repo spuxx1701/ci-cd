@@ -55,6 +55,9 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'pnpm'
 
+    - name: Install dependencies
+      run: pnpm install ${{ inputs.PNPM_FLAGS }}
+
     - name: Run unit tests
       env:
         TEST_COMMAND: ${{ inputs.TEST_COMMAND_UNIT }}

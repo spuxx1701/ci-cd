@@ -35,6 +35,9 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'pnpm'
 
+    - name: Install dependencies
+      run: pnpm install ${{ inputs.PNPM_FLAGS }}
+
     - name: Build
       run: pnpm ${{ inputs.PNPM_FLAGS }} build
 

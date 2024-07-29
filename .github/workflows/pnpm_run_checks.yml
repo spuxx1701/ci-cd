@@ -40,6 +40,9 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'pnpm'
 
+    - name: Install dependencies
+      run: pnpm install ${{ inputs.PNPM_FLAGS }}
+
     - name: Run checks
       env:
         CHECK_COMMAND: ${{ inputs.CHECK_COMMAND }}
