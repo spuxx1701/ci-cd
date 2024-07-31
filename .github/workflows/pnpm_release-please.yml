@@ -14,7 +14,7 @@ on:
         required: false
         default: '.release-please/rp-manifest.json'
     secrets:
-      GITHUB_TOKEN:
+      GITHUB_ACCESS_TOKEN:
         description: "Token to authenticate with GitHub"
         required: true
 
