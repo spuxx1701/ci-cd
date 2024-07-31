@@ -19,10 +19,6 @@ on:
         description: "Token to authenticate with GitHub"
         required: true
 
-permissions:
-  contents: write
-  pull-requests: write
-
 jobs:
   run_release_please:
     runs-on: ubuntu-latest
