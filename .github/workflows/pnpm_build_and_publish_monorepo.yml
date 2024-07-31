@@ -60,13 +60,11 @@ jobs:
         echo "package_name=${PACKAGE_NAME}" >> $GITHUB_OUTPUT
 
     - name: Publish to npm
-      needs:
-      - determine_package
       run: |
         echo "Publishing as:"
         npm whoami
         echo "Publishing artifact(s)."
-        pnpm -r publish --filter ${{ needs.determine_package.outputs.package_name }}" --no-git-checks --access public
+        pnpm -r publish --filter ${{ steps.determine_package.outputs.package_name }}" --no-git-checks --access public
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
