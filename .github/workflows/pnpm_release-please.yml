@@ -48,7 +48,7 @@ jobs:
         --manifest-file=${{ inputs.MANIFEST_FILE_PATH }} \
         release-pr
 
-    - name: Create GitHubbuild: Renamed  release
+    - name: Create GitHub release
       run: |
         pnpx release-please \
         --repo-url=${{ github.repository_owner }}/{{ github.event.repository.name }} \
