@@ -1,4 +1,3 @@
-# For documentation, see: https://github.com/googleapis/release-please-action?tab=readme-ov-file#release-please-action
 name: Run release-please
 
 on:
@@ -22,10 +21,38 @@ on:
 jobs:
   run_release_please:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [22]
     steps:
-    - uses: googleapis/release-please-action@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v4
       with:
-        token: ${{ secrets.TOKEN }}
-        release-type: node
-        config-file: ${{ inputs.CONFIG_FILE_PATH }}
-        manifest-file: ${{ inputs.MANIFEST_FILE_PATH }}
+        version: ${{ inputs.PNPM_VERSION }}
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'pnpm'
+
+    - name: Create pull request
+      run: |
+        pnpx release-please \
+        --repo-url=${{ github.repository_owner }}/{{ github.event.repository.name }} \
+        --token=${{ secrets.TOKEN }} \
+        --config-file=${{ inputs.CONFIG_FILE_PATH }} \
+        --manifest-file=${{ inputs.MANIFEST_FILE_PATH }} \
+        release-pr
+
+    - name: Create GitHub release
+      run: |
+        pnpx release-please \
+        --repo-url=${{ github.repository_owner }}/{{ github.event.repository.name }} \
+        --token=${{ secrets.TOKEN }} \
+        --config-file=${{ inputs.CONFIG_FILE_PATH }} \
+        --manifest-file=${{ inputs.MANIFEST_FILE_PATH }} \
+        github-release
