@@ -62,7 +62,8 @@ jobs:
     - name: Merge package.json
       needs: determine_package
       run: |
-        pnpx package-json-merge package.json ${{ inputs.PACKAGES_PATH }}/${{ needs.determine_package.outputs.package_name }}/package.json > ${{ inputs.PACKAGES_PATH }}/${{ needs.determine_package.outputs.package_name }}/package.json
+        mv ${{ inputs.PACKAGES_PATH }}/${{ needs.determine_package.outputs.package_name }}/package.json ${{ inputs.PACKAGES_PATH }}/${{ needs.determine_package.outputs.package_name }}/package_template.json
+        pnpx package-json-merge package.json ${{ inputs.PACKAGES_PATH }}/${{ needs.determine_package.outputs.package_name }}/package_template.json > ${{ inputs.PACKAGES_PATH }}/${{ needs.determine_package.outputs.package_name }}/package.json
         echo "package.json files were merged."
 
     - name: Publish to npm
