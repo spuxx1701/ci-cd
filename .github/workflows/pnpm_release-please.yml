@@ -7,12 +7,12 @@ on:
         description: 'The path to the release-please configuration file'
         type: string
         required: false
-        default: '.release-please/rp-config.json'
+        default: '.release-please/config.json'
       MANIFEST_FILE_PATH:
         description: 'The path to the release-please manifest file'
         type: string
         required: false
-        default: '.release-please/rp-manifest.json'
+        default: '.release-please/manifest.json'
     secrets:
       TOKEN:
         description: "Token to authenticate with GitHub"
@@ -48,7 +48,7 @@ jobs:
         --manifest-file=${{ inputs.MANIFEST_FILE_PATH }} \
         release-pr
 
-    - name: Create GitHub release
+    - name: Create GitHubbuild: Renamed  release
       run: |
         pnpx release-please \
         --repo-url=${{ github.repository_owner }}/{{ github.event.repository.name }} \
