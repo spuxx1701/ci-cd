@@ -59,15 +59,9 @@ jobs:
         echo "Determined package name: $PACKAGE_NAME"
         echo "package_name=${PACKAGE_NAME}" >> $GITHUB_OUTPUT
 
-    # - name: Merge package.json
-    #   needs: determine_package
-    #   run: |
-    #     mv ${{ inputs.PACKAGES_PATH }}/${{ needs.determine_package.outputs.package_name }}/package.json ${{ inputs.PACKAGES_PATH }}/${{ needs.determine_package.outputs.package_name }}/package_template.json
-    #     pnpx package-json-merge package.json ${{ inputs.PACKAGES_PATH }}/${{ needs.determine_package.outputs.package_name }}/package_template.json > ${{ inputs.PACKAGES_PATH }}/${{ needs.determine_package.outputs.package_name }}/package.json
-    #     echo "package.json files were merged."
-
     - name: Publish to npm
-      needs: determine_package
+      needs:
+      - determine_package
       run: |
         echo "Publishing as:"
         npm whoami
