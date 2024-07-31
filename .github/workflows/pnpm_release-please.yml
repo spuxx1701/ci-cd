@@ -51,7 +51,7 @@ jobs:
     - name: Create GitHub release
       run: |
         pnpx release-please \
-        --repo-url=${{ github.repository_owner }}/{{ github.event.repository.name }} \
+        --repo-url=${{ github.repository_owner }}/${{ github.event.repository.name }} \
         --token=${{ secrets.TOKEN }} \
         --config-file=${{ inputs.CONFIG_FILE_PATH }} \
         --manifest-file=${{ inputs.MANIFEST_FILE_PATH }} \
