@@ -8,6 +8,11 @@ on:
         type: string
         required: false
         default: ''
+      PACKAGES_PATH:
+        description: 'The path to where the packages are stored within the monorepo'
+        type: string
+        required: false
+        default: 'packages'
     secrets:
       NPM_TOKEN:
         description: "Token to authenticate with npm registry"
@@ -46,15 +51,28 @@ jobs:
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+    - name: Determine package name
+      id: determine_package
+      run: |
+        TAG_NAME=${GITHUB_REF#refs/tags/}
+        PACKAGE_NAME=${TAG_NAME%-v*}
+        echo "Determined package name: $PACKAGE_NAME"
+        echo "package_name=${PACKAGE_NAME}" >> $GITHUB_OUTPUT
+
+    - name: Merge package.json
+      needs: determine_package
+      run: |
+        pnpx package-json-merge package.json ${{ inputs.PACKAGES_PATH }}/${{ needs.determine_package.outputs.package_name }}/package.json > ${{ inputs.PACKAGES_PATH }}/${{ needs.determine_package.outputs.package_name }}/package.json
+        echo "package.json files were merged."
+
     - name: Publish to npm
+      needs: determine_package
       run: |
         echo "Publishing as:"
         npm whoami
         echo "Publishing artifact(s)."
-        TAG_NAME=${GITHUB_REF#refs/tags/}
-        PACKAGE_NAME=${TAG_NAME%-v*}
-        echo "Filtered package name: $PACKAGE_NAME"
-        pnpm -r publish --filter $PACKAGE_NAME --no-git-checks --access public
+        pnpm -r publish --filter ${{ needs.determine_package.outputs.package_name }}"
+ --no-git-checks --access public
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
