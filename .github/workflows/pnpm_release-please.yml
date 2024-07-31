@@ -19,7 +19,7 @@ on:
         required: true
 
 jobs:
-  release_please_create_pr:
+  run_release_please:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -46,3 +46,11 @@ jobs:
         --config-file=${{ inputs.CONFIG_FILE_PATH }} \
         --manifest-file=${{ inputs.MANIFEST_FILE_PATH }} \
         release-pr
+
+    - name: Create release-please GitHub release
+      run: |
+        pnpx release-please \
+        --token=${{ secrets.GITHUB_TOKEN }} \
+        --config-file=${{ inputs.CONFIG_FILE_PATH }} \
+        --manifest-file=${{ inputs.MANIFEST_FILE_PATH }} \
+        github-release
