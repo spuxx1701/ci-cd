@@ -51,4 +51,10 @@ jobs:
         echo "Publishing as:"
         npm whoami
         echo "Publishing artifact(s)."
-        pnpm -r publish --no-git-checks --access public
+        TAG_NAME=${GITHUB_REF#refs/tags/}
+        PACKAGE_NAME=${TAG_NAME%-v*}
+        echo "Filtered package name: $PACKAGE_NAME"
+        pnpm -r publish --filter $PACKAGE_NAME --no-git-checks --access public
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
