@@ -13,6 +13,11 @@ on:
         type: string
         required: false
         default: 'packages'
+      TAG:
+        description: 'The tag under which to publish. Defaults to latest.'
+        type: string
+        required: false
+        default: 'latest'
     secrets:
       NPM_TOKEN:
         description: "Token to authenticate with npm registry"
@@ -64,7 +69,7 @@ jobs:
         echo "Publishing as:"
         npm whoami
         echo "Publishing artifact(s)."
-        pnpm -r publish --filter ${{ steps.determine_package.outputs.package_name }} --no-git-checks --access public
+        pnpm -r publish --filter ${{ steps.determine_package.outputs.package_name }} --no-git-checks --access public --tag ${{ inputs.TAG }}
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
