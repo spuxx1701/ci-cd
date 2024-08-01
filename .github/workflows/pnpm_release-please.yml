@@ -13,6 +13,11 @@ on:
         type: string
         required: false
         default: '.release-please/manifest.json'
+      ARGS:
+        description: 'Further arguments that should be passed to release-please, see: https://github.com/googleapis/release-please/blob/main/docs/cli.md'
+        type: string
+        required: false
+        default: ''
     secrets:
       TOKEN:
         description: "Token to authenticate with GitHub"
@@ -45,7 +50,7 @@ jobs:
         --repo-url=${{ github.repository_owner }}/${{ github.event.repository.name }} \
         --token=${{ secrets.TOKEN }} \
         --config-file=${{ inputs.CONFIG_FILE_PATH }} \
-        --manifest-file=${{ inputs.MANIFEST_FILE_PATH }} \
+        --manifest-file=${{ inputs.MANIFEST_FILE_PATH }} ${{ inputs.ARGS }} \
         release-pr
 
     - name: Create GitHub release
@@ -54,5 +59,5 @@ jobs:
         --repo-url=${{ github.repository_owner }}/${{ github.event.repository.name }} \
         --token=${{ secrets.TOKEN }} \
         --config-file=${{ inputs.CONFIG_FILE_PATH }} \
-        --manifest-file=${{ inputs.MANIFEST_FILE_PATH }} \
+        --manifest-file=${{ inputs.MANIFEST_FILE_PATH }} ${{ inputs.ARGS }} \
         github-release
