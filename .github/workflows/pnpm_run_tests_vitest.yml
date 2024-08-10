@@ -1,4 +1,4 @@
-name: Install dependencies and cache
+name: Run tests (vitest)
 
 on:
   workflow_call:
@@ -9,15 +9,15 @@ on:
         required: false
         default: ''
       PNPM_BUILD:
-        description: "Whether to run pnpm -r build before tests"
+        description: "Whether to run pnpm -r build before running the tests"
         type: boolean
         required: false
         default: false
-      TEST_COMMAND_UNIT:
-        description: "Command to run unit tests"
+      TEST_COMMAND_VITEST:
+        description: "Command to run vitest tests"
         type: string
         required: false
-        default: "test:unit"
+        default: "test:vitest"
       COVERAGE_DISABLE:
         description: "Whether code coverage reporting should be disabled."
         type: boolean
@@ -35,7 +35,7 @@ on:
 
 
 jobs:
-  run_unit_tests:
+  run_tests_vitest:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -62,7 +62,7 @@ jobs:
       if: ${{ inputs.PNPM_BUILD }}
       run: pnpm -r build
 
-    - name: Run unit tests
+    - name: Run tests (vitest)
       env:
-        TEST_COMMAND: ${{ inputs.TEST_COMMAND_UNIT }}
+        TEST_COMMAND: ${{ inputs.TEST_COMMAND_VITEST }}
       run: pnpm run $TEST_COMMAND
