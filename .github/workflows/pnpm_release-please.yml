@@ -13,11 +13,11 @@ on:
         type: string
         required: false
         default: '.release-please/manifest.json'
-      ARGS:
-        description: 'Further arguments that should be passed to release-please, see: https://github.com/googleapis/release-please/blob/main/docs/cli.md'
-        type: string
-        required: false
-        default: ''
+        # ARGS:
+        #   description: 'Further arguments that should be passed to release-please, see: https://github.com/googleapis/release-please/blob/main/docs/cli.md'
+        #   type: string
+        #   required: false
+        #   default: ''
     secrets:
       TOKEN:
         description: "Token to authenticate with GitHub"
@@ -44,20 +44,27 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'pnpm'
 
-    - name: Create pull request
-      run: |
-        pnpx release-please ${{ inputs.ARGS }} release-pr \
-        --repo-url=${{ github.repository_owner }}/${{ github.event.repository.name }} \
-        --token=${{ secrets.TOKEN }} \
-        --config-file=${{ inputs.CONFIG_FILE_PATH }} \
-        --manifest-file=${{ inputs.MANIFEST_FILE_PATH }} \
+    - name: Run release-please
+      uses: googleapis/release-please-action@v4
+      with:
+        token: ${{ secrets.TOKEN }}
+        config-file: ${{ inputs.CONFIG_FILE_PATH }}
+        manifest-file: ${{ inputs.MANIFEST_FILE_PATH }}
 
-    - name: Create GitHub release
-      run: |
-        pnpx release-please ${{ inputs.ARGS }} github-release \
-        --repo-url=${{ github.repository_owner }}/${{ github.event.repository.name }} \
-        --token=${{ secrets.TOKEN }} \
-        --config-file=${{ inputs.CONFIG_FILE_PATH }} \
-        --manifest-file=${{ inputs.MANIFEST_FILE_PATH }} \
+    # - name: Create pull request
+    #   run: |
+    #     pnpx release-please ${{ inputs.ARGS }} release-pr \
+    #     --repo-url=${{ github.repository_owner }}/${{ github.event.repository.name }} \
+    #     --token=${{ secrets.TOKEN }} \
+    #     --config-file=${{ inputs.CONFIG_FILE_PATH }} \
+    #     --manifest-file=${{ inputs.MANIFEST_FILE_PATH }} \
+
+    # - name: Create GitHub release
+    #   run: |
+    #     pnpx release-please ${{ inputs.ARGS }} github-release \
+    #     --repo-url=${{ github.repository_owner }}/${{ github.event.repository.name }} \
+    #     --token=${{ secrets.TOKEN }} \
+    #     --config-file=${{ inputs.CONFIG_FILE_PATH }} \
+    #     --manifest-file=${{ inputs.MANIFEST_FILE_PATH }} \
 
 
