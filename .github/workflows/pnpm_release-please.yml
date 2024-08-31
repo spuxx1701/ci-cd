@@ -44,34 +44,21 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'pnpm'
 
-    - name: Run release-please
-      uses: googleapis/release-please-action@v4
-      with:
-        token: ${{ secrets.TOKEN }}
-        config-file: ${{ inputs.CONFIG_FILE_PATH }}
-        manifest-file: ${{ inputs.MANIFEST_FILE_PATH }}
+    - name: Create pull request
+      run: |
+        pnpx release-please release-pr \
+        --repo-url=${{ github.repository_owner }}/${{ github.event.repository.name }} \
+        --token=${{ secrets.TOKEN }} \
+        --config-file=${{ inputs.CONFIG_FILE_PATH }} \
+        --manifest-file=${{ inputs.MANIFEST_FILE_PATH }} \
+        ${{ inputs.ARGS }}
 
-      # - name: Create GitHub release
-      #   uses: googleapis/release-please-action@v4
-      #   with:
-      #     token: ${{ secrets.TOKEN }}
-      #     config-file: ${{ inputs.CONFIG_FILE_PATH }}
-      #     manifest-file: ${{ inputs.MANIFEST_FILE_PATH }}
-      # run: |
-      #   pnpx release-please \
-      #   --repo-url=${{ github.repository_owner }}/${{ github.event.repository.name }} \
-      #   --token=${{ secrets.TOKEN }} \
-      #   --config-file=${{ inputs.CONFIG_FILE_PATH }} \
-      #   --manifest-file=${{ inputs.MANIFEST_FILE_PATH }} \
-      #   ${{ inputs.ARGS }} \
-      #   release-pr
+    - name: Create GitHub release
+      run: |
+        pnpx release-please github-release \
+        --repo-url=${{ github.repository_owner }}/${{ github.event.repository.name }} \
+        --token=${{ secrets.TOKEN }} \
+        --config-file=${{ inputs.CONFIG_FILE_PATH }} \
+        --manifest-file=${{ inputs.MANIFEST_FILE_PATH }} \
+        ${{ inputs.ARGS }}
 
-# - name: Create GitHub release
-#   run: |
-#     pnpx release-please \
-#     --repo-url=${{ github.repository_owner }}/${{ github.event.repository.name }} \
-#     --token=${{ secrets.TOKEN }} \
-#     --config-file=${{ inputs.CONFIG_FILE_PATH }} \
-#     --manifest-file=${{ inputs.MANIFEST_FILE_PATH }} \
-#     ${{ inputs.ARGS }} \
-#     github-release
