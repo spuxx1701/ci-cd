@@ -46,12 +46,10 @@ jobs:
         cache: 'pnpm'
 
     - name: Install dependencies
-      working-directory: ${{ inputs.PATH }}
-      run: pnpm install --frozen-lockfile
+      run: pnpm -r install --frozen-lockfile
 
     - name: Build
-      working-directory: ${{ inputs.PATH }}
-      run: pnpm build
+      run: pnpm -r build
 
     - name: Setup .npmrc file
       working-directory: ${{ inputs.PATH }}
@@ -66,6 +64,4 @@ jobs:
         npm whoami
         echo "Publishing artifact."
         pnpm publish --no-git-checks --access public --tag ${{ inputs.TAG }}
-      env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
