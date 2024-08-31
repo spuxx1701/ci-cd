@@ -46,19 +46,18 @@ jobs:
 
     - name: Create pull request
       run: |
-        pnpx release-please release-pr \
+        pnpx release-please ${{ inputs.ARGS }} release-pr \
         --repo-url=${{ github.repository_owner }}/${{ github.event.repository.name }} \
         --token=${{ secrets.TOKEN }} \
         --config-file=${{ inputs.CONFIG_FILE_PATH }} \
         --manifest-file=${{ inputs.MANIFEST_FILE_PATH }} \
-        ${{ inputs.ARGS }}
 
     - name: Create GitHub release
       run: |
-        pnpx release-please github-release \
+        pnpx release-please ${{ inputs.ARGS }} github-release \
         --repo-url=${{ github.repository_owner }}/${{ github.event.repository.name }} \
         --token=${{ secrets.TOKEN }} \
         --config-file=${{ inputs.CONFIG_FILE_PATH }} \
         --manifest-file=${{ inputs.MANIFEST_FILE_PATH }} \
-        ${{ inputs.ARGS }}
+
 
