@@ -60,4 +60,5 @@ jobs:
         --token=${{ secrets.TOKEN }} \
         --config-file=${{ inputs.CONFIG_FILE_PATH }} \
         --manifest-file=${{ inputs.MANIFEST_FILE_PATH }} \
-        ${{ inputs.ARGS }} github-release
+        ${{ inputs.ARGS }} \
+        github-release
