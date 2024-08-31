@@ -46,7 +46,7 @@ jobs:
         cache: 'pnpm'
 
     - name: Set working directory
-      run: cd {{ inputs.PATH }}
+      run: cd ${{ inputs.PATH }}
 
     - name: Install dependencies
       run: pnpm install --frozen-lockfile
