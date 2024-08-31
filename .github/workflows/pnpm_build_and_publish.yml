@@ -45,21 +45,22 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'pnpm'
 
-    - name: Set working directory
-      run: cd ${{ inputs.PATH }}
-
     - name: Install dependencies
+      working-directory: ${{ inputs.PATH }}
       run: pnpm install --frozen-lockfile
 
     - name: Build
+      working-directory: ${{ inputs.PATH }}
       run: pnpm build
 
     - name: Setup .npmrc file
+      working-directory: ${{ inputs.PATH }}
       run: echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
     - name: Publish to npm
+      working-directory: ${{ inputs.PATH }}
       run: |
         echo "Publishing as:"
         npm whoami
