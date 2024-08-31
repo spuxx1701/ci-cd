@@ -1,4 +1,4 @@
-name: Publish
+name: Build and publish package
 
 on:
   workflow_call:
@@ -8,11 +8,11 @@ on:
         type: string
         required: false
         default: ''
-      PACKAGES_PATH:
-        description: 'The path to where the packages are stored within the monorepo'
+      PATH:
+        description: "The path to the package's directory. Defaults to the project's root directory."
         type: string
         required: false
-        default: 'packages'
+        default: '/'
       TAG:
         description: 'The tag under which to publish. Defaults to latest.'
         type: string
@@ -45,31 +45,26 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'pnpm'
 
+    - name: Set working directory
+      run: cd {{ inputs.PATH }}
+
     - name: Install dependencies
-      run: pnpm -r install --frozen-lockfile
+      run: pnpm install --frozen-lockfile
 
     - name: Build
-      run: pnpm -r build
+      run: pnpm build
 
     - name: Setup .npmrc file
       run: echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-    - name: Determine package name
-      id: determine_package
-      run: |
-        TAG_NAME=${GITHUB_REF#refs/tags/}
-        PACKAGE_NAME=${TAG_NAME%-v*}
-        echo "Determined package name: $PACKAGE_NAME"
-        echo "package_name=${PACKAGE_NAME}" >> $GITHUB_OUTPUT
-
     - name: Publish to npm
       run: |
         echo "Publishing as:"
         npm whoami
-        echo "Publishing artifact(s)."
-        pnpm -r publish --filter ${{ steps.determine_package.outputs.package_name }} --no-git-checks --access public --tag ${{ inputs.TAG }}
+        echo "Publishing artifact."
+        pnpm publish --no-git-checks --access public --tag ${{ inputs.TAG }}
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
