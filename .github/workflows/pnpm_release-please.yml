@@ -50,7 +50,8 @@ jobs:
         --repo-url=${{ github.repository_owner }}/${{ github.event.repository.name }} \
         --token=${{ secrets.TOKEN }} \
         --config-file=${{ inputs.CONFIG_FILE_PATH }} \
-        --manifest-file=${{ inputs.MANIFEST_FILE_PATH }} ${{ inputs.ARGS }} \
+        --manifest-file=${{ inputs.MANIFEST_FILE_PATH }} \
+        ${{ inputs.ARGS }} \
         release-pr
 
     - name: Create GitHub release
