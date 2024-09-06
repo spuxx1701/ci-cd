@@ -27,7 +27,7 @@ on:
         description: "Filename of the code coverage report."
         type: string
         required: false
-        default: "reports/vitest/cobertura-coverage.xml"
+        default: "reports/vitest/coverage/cobertura-coverage.xml"
       COVERAGE_FAIL_BELOW:
         description: "Minimum code coverage required to pass in %."
         type: string
