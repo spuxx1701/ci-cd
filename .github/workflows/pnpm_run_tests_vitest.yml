@@ -79,3 +79,13 @@ jobs:
         filename: ${{ inputs.COVERAGE_FILENAME }}
         fail_below_min: "true"
         thresholds: "${{inputs.COVERAGE_FAIL_BELOW}} 100"
+        badge: true
+        format: markdown
+        output: file
+
+    - name: Add Coverage PR Comment
+      if: ${{ !inputs.COVERAGE_DISABLE && github.event_name == 'pull_request' }}
+      uses: marocchino/sticky-pull-request-comment@v2
+      with:
+        recreate: true
+        path: code-coverage-results.md
