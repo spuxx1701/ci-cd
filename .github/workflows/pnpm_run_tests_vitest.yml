@@ -64,9 +64,7 @@ jobs:
       run: pnpm -r build
 
     - name: Run tests (vitest)
-      env:
-        TEST_COMMAND: ${{ inputs.TEST_COMMAND_VITEST }}
-      run: pnpm run $TEST_COMMAND
+      run: pnpm run ${{ inputs.TEST_COMMAND }}
 
     - name: Upload coverage report
       uses: actions/upload-artifact@v3
