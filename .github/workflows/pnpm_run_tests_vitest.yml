@@ -13,8 +13,8 @@ on:
         type: boolean
         required: false
         default: false
-      TEST_COMMAND_VITEST:
-        description: "Command to run vitest tests"
+      TEST_COMMAND:
+        description: "Command to run vitest tests."
         type: string
         required: false
         default: "test:vitest"
@@ -26,12 +26,13 @@ on:
       COVERAGE_FILENAME:
         description: "Filename of the code coverage report."
         type: string
-        required: true
-      COVERAGE_FAIL_BELOW_MIN:
-        description: "Minimum code coverage required to pass in %. Defaults to 80."
+        required: false
+        default: "reports/vitest/cobertura-coverage.xml"
+      COVERAGE_FAIL_BELOW:
+        description: "Minimum code coverage required to pass in %."
         type: string
         required: false
-        default: "80"
+        default: "95"
 
 
 jobs:
@@ -66,3 +67,17 @@ jobs:
       env:
         TEST_COMMAND: ${{ inputs.TEST_COMMAND_VITEST }}
       run: pnpm run $TEST_COMMAND
+
+    - name: Upload coverage report
+      uses: actions/upload-artifact@v3
+      with:
+        name: coverage-report
+        path: ${{ inputs.COVERAGE_FILENAME }}
+
+    - name: Check code coverage
+      if: ${{ !inputs.COVERAGE_DISABLE }}
+      uses: irongut/CodeCoverageSummary@v1.3.0
+      with:
+        filename: ${{ inputs.COVERAGE_FILENAME }}
+        fail_below_min: "true"
+        thresholds: "${{COVERAGE_FAIL_BELOW}} 100"
