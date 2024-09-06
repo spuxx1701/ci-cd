@@ -80,4 +80,4 @@ jobs:
       with:
         filename: ${{ inputs.COVERAGE_FILENAME }}
         fail_below_min: "true"
-        thresholds: "${{COVERAGE_FAIL_BELOW}} 100"
+        thresholds: "${{inputs.COVERAGE_FAIL_BELOW}} 100"
