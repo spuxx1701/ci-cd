@@ -34,7 +34,6 @@ on:
         required: false
         default: "95"
 
-
 jobs:
   run_tests_vitest:
     runs-on: ubuntu-latest
@@ -81,12 +80,4 @@ jobs:
         thresholds: "${{inputs.COVERAGE_FAIL_BELOW}} 100"
         badge: true
         format: markdown
-        output: file
-
-    - name: Add Coverage PR Comment
-      if: ${{ !inputs.COVERAGE_DISABLE && github.event_name == 'pull_request' }}
-      uses: marocchino/sticky-pull-request-comment@v2
-      with:
-        header: code coverage (vitest)
-        recreate: true
-        path: code-coverage-results.md
+        output: both
