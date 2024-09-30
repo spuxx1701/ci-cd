@@ -7,6 +7,10 @@ on:
         description: "The image name."
         type: string
         required: true
+      platforms:
+        description: "What platforms to build for."
+        type: string
+        default: "linux/amd64,linux/arm64"
       dockerhub_username:
         description: "Your dockerhub username. Defaults to 'spuxx'."
         default: spuxx
@@ -30,27 +34,27 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-        
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v2
-        
-      - name: Log in to DockerHub
-        uses: docker/login-action@v2  
-        with:
-          username: ${{ inputs.dockerhub_username }}
-          password: ${{ secrets.dockerhub_token }}
-          
-      - name: Build and push
-        uses: docker/build-push-action@v3
-        with:
-          push: true
-          file: ./${{ inputs.dockerfile }}
-          tags: ${{ inputs.image_names }}
-          
-      - name: Finish
-        shell: bash
-        run: |
-          echo "Image ${{ inputs.image_tags }} successfully build and pushed to Dockerhub."
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v2
+
+    - name: Set up Docker Buildx
+      id: buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Log in to DockerHub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ inputs.dockerhub_username }}
+        password: ${{ secrets.dockerhub_token }}
+
+    - name: Build and push
+      uses: docker/build-push-action@v3
+      with:
+        push: true
+        file: ./${{ inputs.dockerfile }}
+        tags: ${{ inputs.image_names }}
+
+    - name: Finish
+      shell: bash
+      run: |
+        echo "Image ${{ inputs.image_tags }} successfully build and pushed to Dockerhub."
