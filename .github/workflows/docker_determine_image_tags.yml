@@ -14,7 +14,7 @@ on:
         description: "The current version of the application or package."
         required: true
         type: string
-      tagging_pattern:
+      tag:
         description: |
           What pattern should be used to tag the image.
           - branch: Uses a combination of the branch name, timestamp and commit hash to tag the image.
@@ -48,15 +48,15 @@ jobs:
         # Initialize tags array
         tags=()
         prefix="${{ inputs.dockerhub_username }}/${{ inputs.dockerhub_repository }}"
-        if [[ "${{ inputs.tagging_pattern }}" == "branch" ]]; then
+        if [[ "${{ inputs.tag }}" == "branch" ]]; then
           echo "Using tagging pattern 'branch'."
           # Add branch-based tag
           tags+=("${GITHUB_REF##*/}-$(date +%Y%m%d%H%M%S)-${GITHUB_SHA::7}")
-        elif [[ "${{ inputs.tagging_pattern }}" == "version" ]]; then
+        elif [[ "${{ inputs.tag }}" == "version" ]]; then
           echo "Using tagging pattern 'version'."
           tags+=("${{ inputs.project_version }}")
         else
-          echo "Invalid tagging pattern: '${{ inputs.tagging_pattern }}'"
+          echo "Invalid tagging pattern: '${{ inputs.tag }}'"
           exit 1
         fi
         # Add 'latest' tag if specified

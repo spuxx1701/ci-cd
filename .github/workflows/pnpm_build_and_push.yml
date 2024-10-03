@@ -24,7 +24,7 @@ on:
         description: "Path to the Dockerfile. (default {context}/Dockerfile)"
         default: Dockerfile
         type: string
-      tagging_pattern:
+      tag:
         description: |
           What pattern should be used to tag the image.
             - branch: Uses a combination of the branch name, timestamp and commit hash to tag the image.
@@ -54,7 +54,7 @@ jobs:
       dockerhub_username: ${{ inputs.dockerhub_username }}
       dockerhub_repository: ${{ inputs.dockerhub_repository }}
       project_version: ${{ needs.extract_project_info.outputs.version }}
-      tagging_pattern: ${{ inputs.tagging_pattern }}
+      tag: ${{ inputs.tag }}
       latest: ${{ inputs.latest }}
 
   build_and_push_image:
