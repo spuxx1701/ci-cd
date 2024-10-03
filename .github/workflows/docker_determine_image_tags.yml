@@ -59,12 +59,22 @@ jobs:
           echo "Invalid tagging pattern: '${{ inputs.tag }}'"
           exit 1
         fi
+
         # Add 'latest' tag if specified
         if [[ "${{ inputs.latest }}" == "true" ]]; then
-          tags+=("latest")
+            tags+=("latest")
         fi
-        # Join tags array into a comma-separated string and add prefix
-        tags_string=$(IFS=,; echo "${prefix}:${tags[*]}")
+
+        # Apply prefix to each tag
+        prefixed_tags=()
+        for tag in "${tags[@]}"; do
+            prefixed_tags+=("${prefix}:${tag}")
+        done
+
+        # Join prefixed tags array into a comma-separated string
+        tags_string=$(IFS=,; echo "${prefixed_tags[*]}")
+
         # Set output for use in subsequent steps
         echo "tags=${tags_string}" >> $GITHUB_OUTPUT
         echo "Generated tags: ${tags_string}"
+
