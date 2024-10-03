@@ -47,6 +47,7 @@ jobs:
       run: |
         # Initialize tags array
         tags=()
+        prefix="${{ inputs.dockerhub_username }}/${{ inputs.dockerhub_repository }}"
         if [[ "${{ inputs.tagging_pattern }}" == "branch" ]]; then
           echo "Using tagging pattern 'branch'."
           # Add branch-based tag
@@ -62,8 +63,8 @@ jobs:
         if [[ "${{ inputs.latest }}" == "true" ]]; then
           tags+=("latest")
         fi
-        # Join tags array into a comma-separated string
-        tags_string=$(IFS=,; echo "${tags[*]}")
+        # Join tags array into a comma-separated string and add prefix
+        tags_string=$(IFS=,; echo "${prefix}:${tags[*]}")
         # Set output for use in subsequent steps
         echo "tags=${tags_string}" >> $GITHUB_OUTPUT
         echo "Generated tags: ${tags_string}"
