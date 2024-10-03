@@ -32,7 +32,7 @@ jobs:
       version: ${{ steps.extract.outputs.version }}
       type: ${{ steps.extract.outputs.type }}
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Extract project info
       id: extract_project_info
