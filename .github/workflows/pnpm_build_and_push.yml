@@ -53,7 +53,6 @@ jobs:
     with:
       dockerhub_username: ${{ inputs.dockerhub_username }}
       dockerhub_repository: ${{ inputs.dockerhub_repository }}
-      tagging_pattern: ${{ inputs.tagging_pattern }}
       project_version: ${{ needs.extract_project_info.outputs.version }}
       tagging_pattern: ${{ inputs.tagging_pattern }}
       latest: ${{ inputs.latest }}
