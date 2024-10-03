@@ -45,6 +45,8 @@ jobs:
 
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v3
+      with:
+        platforms: ${{ inputs.platforms }}
 
     - name: Set up Docker Buildx
       id: buildx
@@ -63,6 +65,7 @@ jobs:
         context: ${{ inputs.context }}
         file: ${{ inputs.context }}/${{ inputs.dockerfile }}
         tags: ${{ inputs.image_names }}
+        platforms: ${{ inputs.platforms }}
     - name: Finish
       shell: bash
       run: |
