@@ -20,10 +20,6 @@ on:
         description: "The dockerhub repository. Defaults to the github repository name."
         default: ${{ github.event.repository.name }}
         type: string
-      context:
-        description: "Build's context is the set of files located in the specified PATH or URL (default repo root folder)"
-        default: "."
-        type: string
       dockerfile:
         description: "Path to the Dockerfile. (default {context}/Dockerfile)"
         default: Dockerfile
@@ -70,6 +66,6 @@ jobs:
       platforms: ${{ inputs.platforms }}
       dockerhub_username: ${{ inputs.dockerhub_username }}
       dockerhub_repository: ${{ inputs.dockerhub_repository }}
-      dockerfile: ${{inputs.path}}/${{ inputs.dockerfile }}
+      context: ${{inputs.path}}
     secrets:
       dockerhub_token: ${{ secrets.dockerhub_token }}
