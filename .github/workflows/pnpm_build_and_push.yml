@@ -60,7 +60,7 @@ jobs:
   build_and_push_image:
     uses: spuxx1701/ci-cd/.github/workflows/docker_build_and_push_image.yml@v4.1.0
     needs: determine_image_tags
-    inputs:
+    with:
       image_names: ${{ needs.determine_image_tags.outputs.tags }}
       platforms: ${{ inputs.platforms }}
       dockerhub_username: ${{ inputs.dockerhub_username }}
