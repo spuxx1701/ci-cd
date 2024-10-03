@@ -41,6 +41,8 @@ jobs:
         node-version: [22]
     timeout-minutes: 5
     steps:
+    - uses: actions/checkout@v4
+
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v3
 
