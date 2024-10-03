@@ -1,0 +1,66 @@
+name: Determine Image Tags
+on:
+  workflow_call:
+    inputs:
+      dockerhub_username:
+        description: "Your dockerhub username. Defaults to 'spuxx'."
+        default: spuxx
+        type: string
+      dockerhub_repository:
+        description: "The dockerhub repository. Defaults to the github repository name."
+        default: ${{ github.event.repository.name }}
+        type: string
+      project_version:
+        description: "The current version of the application or package."
+        required: true
+        type: string
+      tagging_pattern:
+        description: |
+          What pattern should be used to tag the image.
+          - branch: Uses a combination of the branch name, timestamp and commit hash to tag the image.
+          - version: Uses the version in package.json to tag the image.
+        required: true
+        type: string
+      latest:
+        description: "Whether the image should also be tagged as the latest image."
+        default: false
+        type: boolean
+    outputs:
+      tags:
+        description: "The tags."
+        value: ${{ jobs.determine_image_tags.outputs.tags }}
+
+jobs:
+  determine_image_tags:
+    name: Determine image tags
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      tags: ${{ steps.determine_image_tags.outputs.tags }}
+    steps:
+    - name: Determine image tags
+      id: determine_image_tags
+      shell: bash
+      run: |
+        # Initialize tags array
+        tags=()
+        if [[ "${{ inputs.tagging_pattern }}" == "branch" ]]; then
+          echo "Using tagging pattern 'branch'."
+          # Add branch-based tag
+          tags+=("${GITHUB_REF##*/}-$(date +%Y%m%d%H%M%S)-${GITHUB_SHA::7}")
+        elif [[ "${{ inputs.tagging_pattern }}" == "version" ]]; then
+          echo "Using tagging pattern 'version'."
+          tags+=("${{ inputs.project_version }}")
+        else
+          echo "Invalid tagging pattern: '${{ inputs.tagging_pattern }}'"
+          exit 1
+        fi
+        # Add 'latest' tag if specified
+        if [[ "${{ inputs.latest }}" == "true" ]]; then
+          tags+=("latest")
+        fi
+        # Join tags array into a comma-separated string
+        tags_string=$(IFS=,; echo "${tags[*]}")
+        # Set output for use in subsequent steps
+        echo "tags=${tags_string}" >> $GITHUB_OUTPUT
+        echo "Generated tags: ${tags_string}"

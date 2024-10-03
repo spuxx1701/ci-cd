@@ -26,16 +26,16 @@ on:
 
 jobs:
   get_metadata:
-    uses: spuxx1701/ci-cd/.github/workflows/get_metadata.yml@v2.0
+    uses: spuxx1701/ci-cd/.github/workflows/docker_get_metadata.yml@v4.1.0
     with:
       dockerhub_username: ${{ inputs.dockerhub_username }}
       dockerhub_repository: ${{ inputs.dockerhub_repository }}
       latest: ${{ inputs.latest }}
-      
+
   build_and_push_image:
     needs:
-      - get_metadata
-    uses: spuxx1701/ci-cd/.github/workflows/build_and_push_image.yml@v2.0
+    - get_metadata
+    uses: spuxx1701/ci-cd/.github/workflows/docker_build_and_push_image.yml@v4.1.0
     with:
       image_names: ${{ needs.get_metadata.outputs.image_names }}
       dockerhub_username: ${{ inputs.dockerhub_username }}

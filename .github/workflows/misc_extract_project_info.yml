@@ -1,0 +1,46 @@
+name: Extract Project Info
+
+on:
+  workflow_call:
+    inputs:
+      path:
+        description: 'Path to the project folder'
+        required: false
+        default: '.'
+        type: string
+    outputs:
+      name:
+        description: 'Project name'
+        value: ${{ jobs.extract_info.outputs.name }}
+      version:
+        description: 'Project version'
+        value: ${{ jobs.extract_info.outputs.version }}
+      type:
+        description: 'Project type'
+        value: ${{ jobs.extract_info.outputs.type }}
+
+jobs:
+  extract_info:
+    name: Extract project info
+    runs-on: ubuntu-latest
+    outputs:
+      name: ${{ steps.extract.outputs.name }}
+      version: ${{ steps.extract.outputs.version }}
+      type: ${{ steps.extract.outputs.type }}
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Extract project info
+      id: extract_project_info
+      run: |
+        if [ -f "${{ inputs.PATH }}/package.json" ]; then
+          echo "type=node" >> $GITHUB_OUTPUT
+          NAME=$(jq -r '.name' "${{ inputs.PATH }}/package.json")
+          VERSION=$(jq -r '.version' "${{ inputs.PATH }}/package.json")
+          echo "name=$NAME" >> $GITHUB_OUTPUT
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+        else
+          echo "No supported project file found"
+          exit 1
+        fi

@@ -1,0 +1,70 @@
+name: Build and push image
+
+on:
+  workflow_call:
+    inputs:
+      path:
+        description: 'Path to the project folder.'
+        required: false
+        default: '.'
+        type: string
+      platforms:
+        description: "What platforms to build for."
+        type: string
+        default: "linux/amd64,linux/arm64"
+      dockerhub_username:
+        description: "Your dockerhub username. Defaults to 'spuxx'."
+        default: spuxx
+        type: string
+      dockerhub_repository:
+        description: "The dockerhub repository. Defaults to the github repository name."
+        default: ${{ github.event.repository.name }}
+        type: string
+      dockerfile:
+        description: "The dockerfile path relative to the project folder specified 'path' Defaults to 'Dockerfile'."
+        default: Dockerfile
+        type: string
+      tagging_pattern:
+        description: |
+          What pattern should be used to tag the image.
+            - branch: Uses a combination of the branch name, timestamp and commit hash to tag the image.
+            - version: Uses the version in package.json to tag the image.
+        required: true
+        type: string
+      latest:
+        description: "Whether the image should also be tagged as the latest image.
+        default: false
+        type: boolean
+    secrets:
+      dockerhub_token:
+        description: "The dockerhub access token."
+        required: true
+
+jobs:
+  extract_project_info:
+    uses: spuxx1701/ci-cd/.github/workflows/misc_extract_project_info.yml@v4.1.0
+    with:
+      path: apps/nginx-hello-world     
+
+  determine_image_tags:
+    uses: spuxx1701/ci-cd/.github/workflows/docker_determine_image_tags.yml@v4.1.0
+    needs: extract_project_info
+    with:
+      tagging_pattern: ${{ inputs.tagging_pattern }}
+      latest: ${{ inputs.latest }}
+      version: ${{ needs.extract_project_info.outputs.version }}
+      branch: ${{ github.ref_name }}
+      commit_hash: ${{ github.sha }}
+      dockerhub_repository: ${{ inputs.dockerhub_repository }}
+
+  build_and_push_image:
+    uses: spuxx1701/ci-cd/.github/workflows/docker_build_and_push_image.yml@v4.1.0
+    needs: determine_image_tags
+    inputs:
+      image_names: ${{ needs.determine_image_tags.outputs.tags }}
+      platforms: ${{ inputs.platforms }}
+      dockerhub_username: ${{ inputs.dockerhub_username }}
+      dockerhub_repository: ${{ inputs.dockerhub_repository }}
+      dockerfile: ${{ inputs.dockerfile }}
+    secrets:
+      dockerhub_token: ${{ secrets.dockerhub_token }}
