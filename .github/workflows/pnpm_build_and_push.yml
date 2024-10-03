@@ -32,7 +32,7 @@ on:
         required: true
         type: string
       latest:
-        description: "Whether the image should also be tagged as the latest image.
+        description: "Whether the image should also be tagged as the latest image."
         default: false
         type: boolean
     secrets:
@@ -44,7 +44,7 @@ jobs:
   extract_project_info:
     uses: spuxx1701/ci-cd/.github/workflows/misc_extract_project_info.yml@v4.1.0
     with:
-      path: apps/nginx-hello-world     
+      path: apps/nginx-hello-world
 
   determine_image_tags:
     uses: spuxx1701/ci-cd/.github/workflows/docker_determine_image_tags.yml@v4.1.0
