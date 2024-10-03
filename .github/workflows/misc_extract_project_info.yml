@@ -40,6 +40,8 @@ jobs:
           VERSION=$(jq -r '.version' "${{ inputs.PATH }}/package.json")
           echo "name=$NAME" >> $GITHUB_OUTPUT
           echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Project name: ${NAME}"
+          echo "Project version: ${VERSION}"
         else
           echo "No supported project file found"
           exit 1
