@@ -60,6 +60,7 @@ jobs:
 
     - name: Build and push
       uses: docker/build-push-action@v6
+      timeout-minutes: 15
       with:
         push: true
         context: ${{ inputs.context }}
